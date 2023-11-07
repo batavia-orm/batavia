@@ -1,25 +1,26 @@
 package com.batavia.orm.commons;
 
+import java.util.HashMap;
+
 public class Table {
   private String tableName;
-  private int numberOfColumns;
-  private Column[] columns;
+  private HashMap<String, Column> columns;
   
-  public Table(String tableName, int numberOfColumns, Column[] columns) {
+  public Table(String tableName) {
     this.tableName = tableName;
-    this.numberOfColumns = numberOfColumns;
-    this.columns = columns;
+    this.columns = new HashMap<String, Column>();
   }
 
   public String getTableName() {
     return tableName;
   }
 
-  public int getNumberOfColumns() {
-    return numberOfColumns;
+  public void addColumn(Column column) {
+    this.columns.put(column.getColumnName(), column);
   }
 
-  public Column[] getColumns() {
-    return columns;
+  public int getNumberOfColumns() {
+    return this.columns.size();
   }
+
 }
