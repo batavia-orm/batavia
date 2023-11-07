@@ -3,14 +3,14 @@ package com.batavia.orm.common;
 public class Column {
   private String columnName;
   private String columnType;
-  private Boolean isPrimaryKey;
-  private Boolean isForeignKey;
+  private Boolean isPrimaryColumn;
+  private Boolean isUnique;
 
-  public Column(String columnName, String columnType, Boolean isPrimaryKey, Boolean isForeignKey) {
+  public Column(String columnName, String columnType, Boolean isPrimaryColumn, Boolean isUnique) {
     this.columnName = columnName;
     this.columnType = columnType;
-    this.isPrimaryKey = isPrimaryKey;
-    this.isForeignKey = isForeignKey;
+    this.isPrimaryColumn = isPrimaryColumn;
+    this.isUnique = isUnique;
   }
 
   public String getColumnName() {
@@ -21,11 +21,11 @@ public class Column {
     return columnType;
   }
 
-  public Boolean getIsPrimaryKey() {
-    return isPrimaryKey;
+  public Boolean isPrimary() {
+    return isPrimaryColumn;
   }
 
-  public Boolean getIsForeignKey() {
-    return isForeignKey;
+  public Boolean isUnique() {
+    return isUnique;
   }
 }
