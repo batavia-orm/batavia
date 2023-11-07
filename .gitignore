@@ -1,6 +1,9 @@
 # vs-code
 .vscode/
 
+#env
+.env
+
 # maven
 target/
 pom.xml.tag
