@@ -22,6 +22,11 @@ public class RunnerMain {
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
             Statement statement = connection.createStatement()) {
 
+            boolean migrationsTableExists = checkMigrationsTableExists(statement);
+            if (!migrationsTableExists) {
+                createMigrationsTable(statement);
+            }
+
             File[] localMigrationFiles = getLocalMigrationFiles();
             for (File migrationFile : localMigrationFiles) {
                 if (migrationIsUnapplied(migrationFile, statement)) {
@@ -31,6 +36,24 @@ public class RunnerMain {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean checkMigrationsTableExists(Statement statement) throws SQLException {
+        String query = "SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'batavia_migrations')";
+        try (ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
+                boolean exists = resultSet.getBoolean(1);
+                System.out.println("Exists: " + exists);
+                return exists;
+            }
+        }
+        return false;
+    }
+
+    private static void createMigrationsTable(Statement statement) throws SQLException {
+        String query = "CREATE TABLE batavia_migrations (id SERIAL PRIMARY KEY, migration_file VARCHAR(255))";
+        statement.executeUpdate(query);
+        System.out.println("Migrations table created.");
     }
 
     private static File[] getLocalMigrationFiles() {
