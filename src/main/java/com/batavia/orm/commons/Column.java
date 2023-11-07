@@ -1,4 +1,4 @@
-package com.batavia.orm.common;
+package com.batavia.orm.commons;
 
 public class Column {
   private String columnName;
