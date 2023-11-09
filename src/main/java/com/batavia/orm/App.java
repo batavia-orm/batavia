@@ -15,7 +15,7 @@ public class App
     {
         System.out.println( "Hello World!" );
 
-        String url = "jdbc:postgresql://db.jfcjtfntdrivmxlkwgwf.supabase.co:5432/postgres?user=postgres&password=butewahmansion@21";
+        String url = "jdbc:postgresql://db.msfwnmkjpydhcuhmcssf.supabase.co:5432/postgres?user=postgres&password=butewahmansion@21";
 
         Connection connection = null;
         Statement statement = null;
