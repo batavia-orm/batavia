@@ -2,26 +2,69 @@ package com.batavia.orm.generator.sqlScriptGenerator;
 
 import java.util.HashMap;
 
+import com.batavia.orm.commons.*;
+
 public class AlterTableSqlScriptGenerator {
-    
-    public String generateAddColumnScript(String tableName, HashMap<String, String> columns) {
-        String script = "";
 
-        String alterTable = String.format("ALTER TABLE %s ", tableName);
-        String columnName = columns.get("dummy_column_name");
-        //String columnDataType = columns.get("dummy_column_name").get("data_type");
-        String columnDataType = "VARCHAR (500)";
+    public String generateAddColumnScript(Table table, Column[] columns) {
+        /**
+         * FORMAT:
+         * ALTER TABLE table_name
+         * ADD COLUMN column_name1 column_type1,
+         * ....
+         * ADD COLUMN column_nameN column_typeN;
+         */
 
-        String addColumns = String.format("ADD %s %s", columnName, columnDataType);
+        String tableName = table.getTableName();
 
-        script = String.format("%s %s;", alterTable, addColumns);
+        StringBuilder alterTableAddColumnsBuilder = new StringBuilder(
+                String.format("ALTER TABLE %s\n", tableName));
 
-        return script;
+        int numberOfColumnsToAdd = columns.length;
+
+        for (int i = 0; i < numberOfColumnsToAdd; i++) {
+            alterTableAddColumnsBuilder.append(
+                    String.format("ADD COLUMN %s %s", columns[i].getColumnName(), columns[i].getColumnType()));
+
+            if (i < numberOfColumnsToAdd - 1) {
+                alterTableAddColumnsBuilder.append(",\n");
+            }
+        }
+
+        alterTableAddColumnsBuilder.append(';');
+
+        return alterTableAddColumnsBuilder.toString();
     }
 
-    public String generateDropColumnScript(String tableName){
-         String script = "";
+    public String generateDropColumnScript(Table table, Column[] columns) {
+        /**
+         * FORMAT:
+         * ALTER TABLE table_name
+         * DROP COLUMN column_name1,
+         * ....
+         * DROP COLUMN column_nameN;
+         */
 
-         return script;
+        String tableName = table.getTableName();
+        HashMap<String, Column> tableColumns = table.getColumns();
+
+        int numberOfColumnsToDrop = columns.length;
+        StringBuilder alterTableDropColumnsBuilder = new StringBuilder(
+                String.format("ALTER TABLE %s\n", tableName));
+
+        for (int i = 0; i < numberOfColumnsToDrop; i++) {
+            Column column = tableColumns.get(columns[i].getColumnName());
+
+            alterTableDropColumnsBuilder.append(
+                    String.format("DROP COLUMN %s", column.getColumnName()));
+
+            if (i < numberOfColumnsToDrop - 1) {
+                alterTableDropColumnsBuilder.append(",\n");
+            }
+        }
+
+        alterTableDropColumnsBuilder.append(';');
+
+        return alterTableDropColumnsBuilder.toString();
     }
 }

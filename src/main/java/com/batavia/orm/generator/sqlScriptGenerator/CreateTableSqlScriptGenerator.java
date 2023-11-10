@@ -1,26 +1,45 @@
 package com.batavia.orm.generator.sqlScriptGenerator;
 
-// tables = HashMap<String, Table> 
-// tables.columns = HashMap<String, Column>
+import java.util.HashMap;
+import java.util.Map;
+
+import com.batavia.orm.commons.*;
 
 public class CreateTableSqlScriptGenerator {
 
-    public String generateCreateTableScript(String tableName, String[] columns) {
-        String script = "";
-        int attributesLength = columns.length;
-        String createTable = String.format("CREATE TABLE %s ", tableName);
-        String tableAttributes = "(";
+    public String generateCreateTableScript(Table table) {
+        /*
+         * FORMAT:
+         * CREATE TABLE table_name (
+         *     column_name1 column_type1,
+         *     ...
+         *     column_nameN column_typeN
+         * );
+         */
 
-        for (int i = 0; i < attributesLength; i++) {
-            if (i == attributesLength - 1) {
-                 tableAttributes += columns[i];
+        HashMap<String, Column> tableColumns = table.getColumns();
+        String tableName = table.getTableName();
+
+        StringBuilder createTableScriptBuilder = new StringBuilder(
+                String.format("CREATE TABLE %s (\n", tableName));
+
+        int mapIndex = 0;
+        for (Map.Entry<String, Column> entry : tableColumns.entrySet()) {
+            Column column = entry.getValue();
+            String columnAttributes = "\t" + column.getColumnName() + " " + column.getColumnType();
+
+            createTableScriptBuilder.append(
+                    String.format("%s", columnAttributes));
+
+            if (mapIndex < tableColumns.size() - 1) {
+                createTableScriptBuilder.append(",\n");
             }
-            tableAttributes += columns[i] + ",\n";
+
+            mapIndex++;
         }
 
-        tableAttributes += ")";
-        script = String.format("%s %s;", createTable, tableAttributes);
+        createTableScriptBuilder.append("\n);");
 
-        return script;
+        return createTableScriptBuilder.toString();
     }
 }

@@ -15,11 +15,11 @@ public class Utils {
         }
 
         // Format: timestamp-filename.sql (e.g. 167493743947-create-table-employees.sql)
-        String filePath = String.format("%s/%s-%s.sql",MIGRATION_DIR, timestamp, fileName);
+        String migrationFileName = String.format("src\\main\\java\\com\\batavia\\orm\\%s\\%s-%s.sql",MIGRATION_DIR, timestamp, fileName);
 
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (FileWriter writer = new FileWriter(migrationFileName)) {
             writer.write(migrationScript);
-            System.out.println("File created: " + filePath);
+            System.out.println("File created: " + migrationFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
