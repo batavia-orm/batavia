@@ -1,12 +1,27 @@
-package com.batavia.orm.generator.sqlScriptGenerator;
+package com.batavia.orm.generator.sqlScriptGenerators;
 
 import java.util.HashMap;
 
 import com.batavia.orm.commons.*;
 
-public class AlterTableSqlScriptGenerator {
+public enum AlterTableCategory {
+    ADD_COLUMN,
+    DROP_COLUMN,
+    OTHERS;
 
-    public String generateAddColumnScript(Table table, Column[] columns) {
+    public String getScriptAccordingToAlterType(Table table, Column[] columns) {
+        String script = "";
+
+        if (this == ADD_COLUMN) {
+            script = generateAddColumnScript(table, columns);
+        } else if (this == DROP_COLUMN) {
+            script = generateDropColumnScript(table, columns);
+        }
+
+        return script;
+    }
+
+    private static String generateAddColumnScript(Table table, Column[] columns) {
         /**
          * FORMAT:
          * ALTER TABLE table_name
@@ -21,7 +36,6 @@ public class AlterTableSqlScriptGenerator {
                 String.format("ALTER TABLE %s\n", tableName));
 
         int numberOfColumnsToAdd = columns.length;
-
         for (int i = 0; i < numberOfColumnsToAdd; i++) {
             alterTableAddColumnsBuilder.append(
                     String.format("ADD COLUMN %s %s", columns[i].getColumnName(), columns[i].getColumnType()));
@@ -36,7 +50,7 @@ public class AlterTableSqlScriptGenerator {
         return alterTableAddColumnsBuilder.toString();
     }
 
-    public String generateDropColumnScript(Table table, Column[] columns) {
+    private static String generateDropColumnScript(Table table, Column[] columns) {
         /**
          * FORMAT:
          * ALTER TABLE table_name

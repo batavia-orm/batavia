@@ -1,4 +1,4 @@
-package com.batavia.orm.generator.sqlScriptGenerator;
+package com.batavia.orm.generator.sqlScriptGenerators;
 
 import com.batavia.orm.commons.Table;
 
