@@ -4,7 +4,12 @@ import com.batavia.orm.commons.*;
 
 public class AlterTableSqlScriptGenerator {
 
-    public String generateAlterTableScript(Table table, Column[] columns, AlterTableCategory alterType) throws Exception {
+    public String generateAlterTableScript(
+        Table table,
+        Column[] columns,
+        AlterTableCategory alterType
+    ) throws Exception {
+        
         if (alterType == null) {
             throw new Exception("Invalid alter table sql command");
         }
@@ -15,6 +20,5 @@ public class AlterTableSqlScriptGenerator {
 
         return script;
     }
-
 
 }

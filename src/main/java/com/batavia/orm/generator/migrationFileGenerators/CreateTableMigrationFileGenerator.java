@@ -12,7 +12,11 @@ public class CreateTableMigrationFileGenerator implements IMigrationFileGenerato
     }
 
     @Override
-    public void generateMigrationFile(Table table, String fileName, Column[] columns) {
+    public void generateMigrationFile(
+        Table table,
+        String fileName,
+        Column[] columns
+    ) {
         String migrationScript = this.createTableSqlScriptGenerator.generateCreateTableScript(table);
         Utils.writeToMigrationFile(fileName, migrationScript);
     }

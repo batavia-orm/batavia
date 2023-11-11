@@ -12,7 +12,11 @@ public class DropTableMigrationFileGenerator implements IMigrationFileGenerator 
     }
 
     @Override
-    public void generateMigrationFile(Table table, String fileName, Column[] columns) {
+    public void generateMigrationFile(
+        Table table,
+        String fileName,
+        Column[] columns
+    ) {
         String migrationScript = this.dropTableSqlScriptGenerator.generateDropTableScript(table);
         Utils.writeToMigrationFile(fileName, migrationScript);
     }

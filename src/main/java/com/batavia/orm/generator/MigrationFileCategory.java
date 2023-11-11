@@ -10,18 +10,21 @@ public enum MigrationFileCategory {
     ALTER_TABLE,
     OTHERS;
 
-    public void runMigrationFileGenerator(Table table, Column[] columns, String fileName,
-            AlterTableCategory alterType) {
-
+    public void runMigrationFileGenerator(
+        Table table, 
+        Column[] columns, 
+        String fileName,
+        AlterTableCategory alterType
+    ) {
         if (this == CREATE_TABLE) {
-            CreateTableMigrationFileGenerator createTableMigrationFile = new CreateTableMigrationFileGenerator();
-            createTableMigrationFile.generateMigrationFile(table, fileName, null);
+            CreateTableMigrationFileGenerator createTableMigration = new CreateTableMigrationFileGenerator();
+            createTableMigration.generateMigrationFile(table, fileName, null);
         } else if (this == DROP_TABLE) {
-            DropTableMigrationFileGenerator dropTableMigrationFile = new DropTableMigrationFileGenerator();
-            dropTableMigrationFile.generateMigrationFile(table, fileName, null);
+            DropTableMigrationFileGenerator dropTableMigration = new DropTableMigrationFileGenerator();
+            dropTableMigration.generateMigrationFile(table, fileName, null);
         } else if (this == ALTER_TABLE) {
-            AlterTableMigrationFileGenerator alterTableMigrationFile = new AlterTableMigrationFileGenerator(alterType);
-            alterTableMigrationFile.generateMigrationFile(table, fileName, columns);
+            AlterTableMigrationFileGenerator alterTableMigration = new AlterTableMigrationFileGenerator(alterType);
+            alterTableMigration.generateMigrationFile(table, fileName, columns);
         } else if (this == OTHERS) {
             System.out.println("This command is not yet being supported");
         }

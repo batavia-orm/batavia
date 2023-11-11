@@ -15,7 +15,11 @@ public class AlterTableMigrationFileGenerator implements IMigrationFileGenerator
     }
 
     @Override
-    public void generateMigrationFile(Table table, String fileName, Column[] columns) {
+    public void generateMigrationFile(
+        Table table,
+        String fileName,
+        Column[] columns
+    ) {
         String migrationScript = "";
         try {
             migrationScript = alterTableSqlScriptGenerator.generateAlterTableScript(table, columns, alterType);
