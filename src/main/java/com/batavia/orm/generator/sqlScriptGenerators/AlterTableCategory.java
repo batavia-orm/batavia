@@ -37,11 +37,15 @@ public enum AlterTableCategory {
 
         int numberOfColumnsToAdd = columns.length;
         for (int i = 0; i < numberOfColumnsToAdd; i++) {
-            alterTableAddColumnsBuilder.append(
-                    String.format("ADD COLUMN %s %s", columns[i].getColumnName(), columns[i].getColumnType()));
+            try {
+                alterTableAddColumnsBuilder.append(
+                        String.format("ADD COLUMN %s %s", columns[i].getColumnName(), columns[i].getColumnType()));
 
-            if (i < numberOfColumnsToAdd - 1) {
-                alterTableAddColumnsBuilder.append(",\n");
+                if (i < numberOfColumnsToAdd - 1) {
+                    alterTableAddColumnsBuilder.append(",\n");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -67,13 +71,15 @@ public enum AlterTableCategory {
                 String.format("ALTER TABLE %s\n", tableName));
 
         for (int i = 0; i < numberOfColumnsToDrop; i++) {
-            Column column = tableColumns.get(columns[i].getColumnName());
-
-            alterTableDropColumnsBuilder.append(
-                    String.format("DROP COLUMN %s", column.getColumnName()));
-
-            if (i < numberOfColumnsToDrop - 1) {
-                alterTableDropColumnsBuilder.append(",\n");
+            try {
+                Column column = tableColumns.get(columns[i].getColumnName());
+                alterTableDropColumnsBuilder.append(
+                        String.format("DROP COLUMN %s", column.getColumnName()));
+                if (i < numberOfColumnsToDrop - 1) {
+                    alterTableDropColumnsBuilder.append(",\n");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

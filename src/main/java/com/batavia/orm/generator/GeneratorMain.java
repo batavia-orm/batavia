@@ -12,6 +12,11 @@ public class GeneratorMain {
     private Column[] columnsToBeApplied;
     private String migrationFileName;
 
+    public GeneratorMain(Table table, String migrationFileName) {
+        this.tableToBeApplied = table;
+        this.migrationFileName = migrationFileName;
+    }
+
     public GeneratorMain(Table table, Column[] columns, String migrationFileName) {
         this.tableToBeApplied = table;
         this.migrationFileName = migrationFileName;
