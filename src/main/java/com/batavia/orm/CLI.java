@@ -6,27 +6,34 @@ import java.io.InputStreamReader;
 
 public class CLI {
     public static void main(String[] args) {
+        System.out.println("Welcome to Batavia ORM");
         if (args.length == 0) {
             // If no command-line arguments are provided, start an interactive session.
-            startInteractiveSession();
+            App ormApp = new App();
+            startCLI(ormApp);
         } else {
             // Parse and execute the provided command-line arguments.
             executeCommand(args);
         }
     }
 
-    private static void startInteractiveSession() {
+    private static void startCLI(App ormApp) {
+        // make instance from the scanner class instead of the buferred reader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     
         while (true) {
             try {
                 System.out.print("Please provide a command: ");
                 String userInput = reader.readLine();
+
                 if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit")) {
+                    System.out.println("Exiting...");
                     break; // Exit the loop if the user input is "exit" or "quit"
                 }
+
                 String[] args = userInput.split("\\s+");
                 executeCommand(args);
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -39,7 +46,7 @@ public class CLI {
             return;
         }
 
-        String command = args[0];
+        String command = args[0].toLowerCase();
         switch (command) {
             case "--generate-migration":
                 if (args.length < 2) {
