@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Utils {
 
     public static void writeToMigrationFile(String filePath, String migrationScript) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(migrationScript);
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {

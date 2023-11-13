@@ -2,6 +2,7 @@ package com.batavia.orm.generator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -11,6 +12,17 @@ import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.AlterTableCategory;
 
 public class GeneratorMainTest {
+
+    @BeforeEach
+    public void clearFile() {
+        String migrationFilePath = "src\\main\\java\\com\\batavia\\orm\\migrations\\dummy-migration-test.sql";
+
+        try {
+            Files.write(Paths.get(migrationFilePath), new byte[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void tesRunSqlScriptGeneratorToFile_CreateTable() throws Exception {
