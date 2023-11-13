@@ -9,77 +9,67 @@ public class CLI {
         System.out.println("Welcome to Batavia ORM");
         if (args.length == 0) {
             // If no command-line arguments are provided, start an interactive session.
-            App ormApp = new App();
-            startCLI(ormApp);
+            startCLI();
         } else {
             // Parse and execute the provided command-line arguments.
-            executeCommand(args);
+            parseCommand(args);
         }
     }
 
-    private static void startCLI(App ormApp) {
+    private static void startCLI() {
         // make instance from the scanner class instead of the buferred reader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    
+
         while (true) {
             try {
                 System.out.print("Please provide a command: ");
                 String userInput = reader.readLine();
-
+    
                 if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit")) {
                     System.out.println("Exiting...");
-                    break; // Exit the loop if the user input is "exit" or "quit"
+                    break;
                 }
-
+    
+                // Parse user input and create the appropriate command
                 String[] args = userInput.split("\\s+");
-                executeCommand(args);
-                
+                Command command = parseCommand(args);
+    
+                // Execute the command
+                if (command != null) {
+                    command.execute();
+                } else {
+                    System.out.println("Unknown command.");
+                }
+    
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    private static void executeCommand(String[] args) {
+    private static Command parseCommand(String[] args) {
         if (args.length < 1) {
             System.out.println("Error: No command provided.");
-            return;
+            return null;
         }
-
+    
         String command = args[0].toLowerCase();
         switch (command) {
             case "--generate-migration":
                 if (args.length < 2) {
                     System.out.println("Usage: --generate-migration <migration-filename>");
+                    return null;
                 } else {
-                    generateMigration(args[1]);
+                    return new GenerateMigrationCommand(args[1]);
                 }
-                break;
             case "--migrate":
-                migrate();
-                break;
+                return new MigrateCommand();
             case "--show-migrations":
-                showMigrations();
-                break;
+                return new ShowMigrationsCommand();
             default:
                 System.out.println("Unknown command: " + command);
                 printUsage();
+                return null;
         }
-    }
-
-    private static void generateMigration(String migrationFilename) {
-        System.out.println("Generating migration: " + migrationFilename);
-        // Implement the logic for generating a migration based on the provided filename.
-    }
-
-    private static void migrate() {
-        System.out.println("Migrating...");
-        // Implement the logic for the "migrate" command.
-    }
-
-    private static void showMigrations() {
-        System.out.println("Showing migrations...");
-        // Implement the logic for the "show-migrations" command.
     }
 
     private static void printUsage() {
