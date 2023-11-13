@@ -22,10 +22,6 @@ public class AlterTableSqlScriptGenerator implements ISqlScriptGenerator {
 
     @Override
     public String generateSqlScript(Table table) {
-        throw new UnsupportedOperationException("Unimplemented method 'generateSqlScript'");
+        throw new UnsupportedOperationException("Unimplemented method parameters for this object");
     }
-
-    public void generateMigrationFile(Table table, String fileName, Column[] columns) {
-    }
-
 }

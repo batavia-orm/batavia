@@ -10,11 +10,9 @@ public enum SqlCommandCategory {
     OTHERS;
 
     public String runSqlScriptGenerator(
-        Table table, 
-        Column[] columns, 
-        String fileName,
-        AlterTableCategory alterType
-    ) {
+            Table table,
+            Column[] columns,
+            AlterTableCategory alterType) {
         String script = "";
         if (this == CREATE_TABLE) {
             CreateTableSqlScriptGenerator generator = new CreateTableSqlScriptGenerator();
@@ -26,7 +24,7 @@ public enum SqlCommandCategory {
             AlterTableSqlScriptGenerator alterTableMigration = new AlterTableSqlScriptGenerator();
             script = alterTableMigration.generateSqlScript(table, columns, alterType);
         } else if (this == OTHERS) {
-            System.out.println("This command is not yet being supported");
+            System.out.println("This sql command is not yet being supported");
         }
 
         return script;

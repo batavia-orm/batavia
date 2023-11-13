@@ -11,34 +11,30 @@ import com.batavia.orm.utils.Utils;
 public class GeneratorMain {
     private Table tableToBeApplied;
     private Column[] columnsToBeApplied;
-    private String migrationFileName;
+    private String migrationFilePath;
 
-    public GeneratorMain(Table table, String migrationFileName) {
+    public GeneratorMain(Table table, String migrationFilePath) {
         this.tableToBeApplied = table;
-        this.migrationFileName = migrationFileName;
+        this.migrationFilePath = migrationFilePath;
     }
 
-    public GeneratorMain(Table table, Column[] columns, String migrationFileName) {
+    public GeneratorMain(Table table, Column[] columns, String migrationFilePath) {
         this.tableToBeApplied = table;
-        this.migrationFileName = migrationFileName;
+        this.migrationFilePath = migrationFilePath;
         this.columnsToBeApplied = columns;
     }
 
-    public void runSqlScriptGenerator (
-        SqlCommandCategory sqlCommand,
-        String fileName,
-        AlterTableCategory optionalAlterTableCategory
-    ) {
-        String resultScript = "";
+    public void runSqlScriptGeneratorToFile(
+            SqlCommandCategory sqlCommand,
+            AlterTableCategory optionalAlterTableCategory) {
 
         Optional<AlterTableCategory> optionalParameter = Optional.ofNullable(optionalAlterTableCategory);
         AlterTableCategory alterTableCategory = optionalParameter.isPresent() ? optionalParameter.get() : null;
 
-        // loop through and accumulate the resultScript
-        sqlCommand.runSqlScriptGenerator(this.tableToBeApplied, this.columnsToBeApplied, this.migrationFileName,
+        String resultScript = sqlCommand.runSqlScriptGenerator(this.tableToBeApplied, this.columnsToBeApplied,
                 alterTableCategory);
 
         // write resultSCript to migration file
-        Utils.writeToMigrationFile(fileName, resultScript);
+        Utils.writeToMigrationFile(this.migrationFilePath, resultScript);
     }
 }

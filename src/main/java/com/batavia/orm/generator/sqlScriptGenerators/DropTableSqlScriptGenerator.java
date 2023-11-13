@@ -12,6 +12,6 @@ public class DropTableSqlScriptGenerator implements ISqlScriptGenerator {
 
     @Override
     public String generateSqlScript(Table table, Column[] columns, AlterTableCategory alterType) {
-        throw new UnsupportedOperationException("Unimplemented method 'generateSqlScript'");
+        throw new UnsupportedOperationException("Unimplemented method parameters for this object");
     }
 }
