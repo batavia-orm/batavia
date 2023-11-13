@@ -1,4 +1,4 @@
-package com.batavia.orm;
+package com.batavia.orm.cli;
 
 import com.batavia.orm.runner.RunnerMain;
 

@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.batavia.orm.cli.Command;
+import com.batavia.orm.cli.GenerateMigrationCommand;
+import com.batavia.orm.cli.MigrateCommand;
+import com.batavia.orm.cli.ShowMigrationsCommand;
+
 public class CLI {
     public static void main(String[] args) {
         System.out.println("Welcome to Batavia ORM");

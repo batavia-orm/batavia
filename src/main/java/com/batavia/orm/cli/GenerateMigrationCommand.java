@@ -1,4 +1,4 @@
-package com.batavia.orm;
+package com.batavia.orm.cli;
 
 public class GenerateMigrationCommand implements Command {
     private String migrationFilename;
