@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -87,29 +89,45 @@ public class RunnerMain {
         System.out.println("Migration executed successfully.");
     }
 
-    private static void revertMigrations(String migrationToRevert, Statement statement) throws SQLException {
-        String query = "SELECT migration_file FROM migrations ORDER BY id DESC";
+    private static void revertMigrations(String migrationToRevert, Statement statement) throws IOException, SQLException {
+        String query = "SELECT migration_file FROM batavia_migrations ORDER BY id DESC";
+        List<String> migrationFiles = new ArrayList<>();
         try (ResultSet resultSet = statement.executeQuery(query)) {
-            boolean migrationFound = false;
             while (resultSet.next()) {
                 String migrationFile = resultSet.getString("migration_file");
-                if (migrationFile.equals(migrationToRevert)) {
-                    migrationFound = true;
-                    break;
-                } else {
-                    revertMigration(migrationFile, statement);
-                }
+                migrationFiles.add(migrationFile);
             }
-            if (!migrationFound) {
-                System.out.println("Specified migration file '" + migrationToRevert + "' not found.");
+        }
+
+        boolean migrationFound = false;
+        for (String migrationFile : migrationFiles) {
+            if (migrationFile.equals(migrationToRevert)) {
+                migrationFound = true;
+                break;
+            } else {
+                revertMigration(migrationFile, statement);
             }
+        }
+
+        if (!migrationFound) {
+            System.out.println("Specified migration file '" + migrationToRevert + "' not found.");
         }
     }
 
-    private static void revertMigration(String migrationFile, Statement statement) throws SQLException {
-        String query = "DELETE FROM migrations WHERE migration_file = '" + migrationFile + "'";
+    private static void revertMigration(String migrationFile, Statement statement) throws IOException, SQLException {
+        System.out.println("Reverting migration: " + migrationFile);
+
+        // Get down migration script filename
+        int dotIndex = migrationFile.lastIndexOf('.');
+        String baseName = migrationFile.substring(0, dotIndex);
+        String extension = migrationFile.substring(dotIndex);
+        String downFileName = baseName + ".down" + extension;
+
+        String migrationContent = new String(Files.readAllBytes(Paths.get(MIGRATIONS_DIR + '/' + downFileName)), StandardCharsets.UTF_8);
+        statement.execute(migrationContent);
+
+        String query = "DELETE FROM batavia_migrations WHERE migration_file = '" + migrationFile + "'";
         statement.executeUpdate(query);
-        System.out.println("Reverted migration: " + migrationFile);
-        // Add code here to revert the specific migration logic (e.g., undo SQL statements)
+        
     }
 }
