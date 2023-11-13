@@ -79,7 +79,7 @@ public class RunnerMain {
     private static void runMigration(File migrationFile, Statement statement) throws IOException, SQLException {
         String migrationFileName = migrationFile.getName();
         System.out.println("Executing migration: " + migrationFileName);
-        String migrationContent = new String(Files.readAllBytes(Paths.get("src/main/java/com/batavia/orm/migrations/" + migrationFileName)), StandardCharsets.UTF_8);
+        String migrationContent = new String(Files.readAllBytes(Paths.get(MIGRATIONS_DIR + '/' + migrationFileName)), StandardCharsets.UTF_8);
         statement.execute(migrationContent);
 
         String query = "INSERT INTO batavia_migrations (migration_file) VALUES ('" + migrationFileName + "')";
