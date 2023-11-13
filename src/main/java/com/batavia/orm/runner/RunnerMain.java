@@ -22,15 +22,20 @@ public class RunnerMain {
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
             Statement statement = connection.createStatement()) {
 
-            boolean migrationsTableExists = checkMigrationsTableExists(statement);
-            if (!migrationsTableExists) {
-                createMigrationsTable(statement);
-            }
+            if (args.length > 0) {
+                String migrationToRevert = args[0];
+                revertMigrations(migrationToRevert, statement);
+            } else {
+                boolean migrationsTableExists = checkMigrationsTableExists(statement);
+                if (!migrationsTableExists) {
+                    createMigrationsTable(statement);
+                }
 
-            File[] localMigrationFiles = getLocalMigrationFiles();
-            for (File migrationFile : localMigrationFiles) {
-                if (migrationIsUnapplied(migrationFile, statement)) {
-                    runMigration(migrationFile, statement);
+                File[] localMigrationFiles = getLocalMigrationFiles();
+                for (File migrationFile : localMigrationFiles) {
+                    if (migrationIsUnapplied(migrationFile, statement)) {
+                        runMigration(migrationFile, statement);
+                    }
                 }
             }
         } catch (SQLException | IOException e) {
@@ -80,5 +85,31 @@ public class RunnerMain {
         String query = "INSERT INTO batavia_migrations (migration_file) VALUES ('" + migrationFileName + "')";
         statement.executeUpdate(query);
         System.out.println("Migration executed successfully.");
+    }
+
+    private static void revertMigrations(String migrationToRevert, Statement statement) throws SQLException {
+        String query = "SELECT migration_file FROM migrations ORDER BY id DESC";
+        try (ResultSet resultSet = statement.executeQuery(query)) {
+            boolean migrationFound = false;
+            while (resultSet.next()) {
+                String migrationFile = resultSet.getString("migration_file");
+                if (migrationFile.equals(migrationToRevert)) {
+                    migrationFound = true;
+                    break;
+                } else {
+                    revertMigration(migrationFile, statement);
+                }
+            }
+            if (!migrationFound) {
+                System.out.println("Specified migration file '" + migrationToRevert + "' not found.");
+            }
+        }
+    }
+
+    private static void revertMigration(String migrationFile, Statement statement) throws SQLException {
+        String query = "DELETE FROM migrations WHERE migration_file = '" + migrationFile + "'";
+        statement.executeUpdate(query);
+        System.out.println("Reverted migration: " + migrationFile);
+        // Add code here to revert the specific migration logic (e.g., undo SQL statements)
     }
 }
