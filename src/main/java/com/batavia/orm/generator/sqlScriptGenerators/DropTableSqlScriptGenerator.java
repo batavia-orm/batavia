@@ -1,11 +1,17 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
-import com.batavia.orm.commons.Table;
+import com.batavia.orm.commons.*;
 
-public class DropTableSqlScriptGenerator {
+public class DropTableSqlScriptGenerator implements ISqlScriptGenerator {
 
-    public String generateDropTableScript(Table table) {
+    @Override
+    public String generateSqlScript(Table table) {
         String dropTableScript = String.format("DROP TABLE %s;", table.getTableName());
         return dropTableScript.toString();
+    }
+
+    @Override
+    public String generateSqlScript(Table table, Column[] columns, AlterTableCategory alterType) {
+        throw new UnsupportedOperationException("Unimplemented method 'generateSqlScript'");
     }
 }

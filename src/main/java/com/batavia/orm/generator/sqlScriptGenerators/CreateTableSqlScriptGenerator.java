@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.batavia.orm.commons.*;
 
-public class CreateTableSqlScriptGenerator {
+public class CreateTableSqlScriptGenerator implements ISqlScriptGenerator {
 
     /*
     * FORMAT:
@@ -16,7 +16,8 @@ public class CreateTableSqlScriptGenerator {
     * );
     */
 
-    public String generateCreateTableScript(Table table) {
+    @Override
+    public String generateSqlScript(Table table) {
         HashMap<String, Column> tableColumns = table.getColumns();
         String tableName = table.getTableName();
 
@@ -41,5 +42,10 @@ public class CreateTableSqlScriptGenerator {
         createTableScriptBuilder.append("\n);");
 
         return createTableScriptBuilder.toString();
+    }
+
+    @Override
+    public String generateSqlScript(Table table, Column[] columns, AlterTableCategory alterType) {
+        throw new UnsupportedOperationException("Unimplemented method 'generateSqlScript'");
     }
 }

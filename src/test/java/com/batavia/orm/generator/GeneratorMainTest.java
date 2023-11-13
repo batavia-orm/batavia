@@ -5,36 +5,12 @@ import org.junit.jupiter.api.BeforeAll;
 
 public class GeneratorMainTest {
     @BeforeAll
-    public static void setup() {
+    public static void cleanup() {
+        // delete all existing migration file in migrations directory
     }
 
     @Test
-    public void testCreateTableMigrationFileGenerator() {
-
-    }
-
-    @Test
-    public void testAlterTableMigrationFileGenerator() {
-
-    }
-
-    @Test
-    public void testDropTableMigrationFileGenerator() {
-
-    }
-
-    @Test
-    public void testCreateTableSqlScriptGenerator() {
-
-    }
-
-    @Test
-    public void testAddColumnSqlScriptGenerator() {
-
-    }
-
-    @Test
-    public void testDropColumnSqlScriptGenerator() {
-
+    public void testRunMigrationFileGenerator() {
+        
     }
 }

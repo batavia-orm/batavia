@@ -45,7 +45,7 @@ public enum AlterTableCategory {
                     alterTableAddColumnsBuilder.append(",\n");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
 
@@ -79,7 +79,7 @@ public enum AlterTableCategory {
                     alterTableDropColumnsBuilder.append(",\n");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
 

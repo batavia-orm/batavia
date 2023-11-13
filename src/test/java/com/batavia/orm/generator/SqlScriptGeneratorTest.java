@@ -14,7 +14,7 @@ public class SqlScriptGeneratorTest {
         Table table = new Table("users");
         table.addColumn(new Column("id", "INT", true, true));
         CreateTableSqlScriptGenerator scriptGenerator = new CreateTableSqlScriptGenerator();
-        String script = scriptGenerator.generateCreateTableScript(table);
+        String script = scriptGenerator.generateSqlScript(table);
         String expectedScript = "CREATE TABLE users (\n" +
                 "\tid INT\n" +
                 ");";
@@ -26,7 +26,7 @@ public class SqlScriptGeneratorTest {
     public void testDropTableSqlScriptGenerator() throws Exception {
         Table table = new Table("users");
         DropTableSqlScriptGenerator scriptGenerator = new DropTableSqlScriptGenerator();
-        String script = scriptGenerator.generateDropTableScript(table);
+        String script = scriptGenerator.generateSqlScript(table);
         String expectedScript = "DROP TABLE users;";
 
         Assertions.assertEquals(expectedScript, script);
@@ -41,7 +41,7 @@ public class SqlScriptGeneratorTest {
         AlterTableCategory alterTableCategory = AlterTableCategory.ADD_COLUMN;
         AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
 
-        String script = scriptGenerator.generateAlterTableScript(table, columnsToAdd, alterTableCategory);
+        String script = scriptGenerator.generateSqlScript(table, columnsToAdd, alterTableCategory);
         String expectedScript = "ALTER TABLE users\n" +
                 "ADD COLUMN email VARCHAR(200),\n" +
                 "ADD COLUMN age INT;";
@@ -64,7 +64,7 @@ public class SqlScriptGeneratorTest {
         AlterTableCategory alterTableCategory = AlterTableCategory.DROP_COLUMN;
         AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
 
-        String script = scriptGenerator.generateAlterTableScript(table, columnsToDrop, alterTableCategory);
+        String script = scriptGenerator.generateSqlScript(table, columnsToDrop, alterTableCategory);
         String expectedScript = "ALTER TABLE users\n" +
                 "DROP COLUMN email,\n" +
                 "DROP COLUMN age;";
