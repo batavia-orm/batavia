@@ -1,6 +1,7 @@
 package com.batavia.orm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -33,20 +34,50 @@ class CLITest {
         System.setIn(new ByteArrayInputStream("exit\n".getBytes()));
 
         // Execute
+        CLI.main(new String[]{});
 
         // Verify
-        assertEquals("Welcome to Batavia ORM\nPlease provide a command: Exiting...\n", outputStreamCaptor.toString().trim());
+        assertEquals("Welcome to Batavia ORM\nPlease provide a command: Exiting...", outputStreamCaptor.toString().trim());
+    
     }
 
     @Test
     void testParseCommand_GenerateMigrationCommand() {
         // Set up
         String userInput = "--generate-migration test_migration";
-        String[] args = userInput.split("\\s+");
+        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
 
         // Execute
+        CLI.main(new String[]{});
 
         // Verify
+        assertEquals("Welcome to Batavia ORM\nPlease provide a command: Generating migration: test_migration", outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    void testStartCLI_MigrateCommand() {
+        // Set up
+        String userInput = "--migrate";
+        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
+
+        // Execute
+        CLI.main(new String[]{});
+
+        // Verify
+        assertEquals("Migrating...", outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    void testStartCLI_ShowMigrationsCommand() {
+        // Set up
+        String userInput = "--show-migrations";
+        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
+
+        // Execute
+        CLI.main(new String[]{});
+
+        // Verify
+        assertEquals("Showing migrations...", outputStreamCaptor.toString().trim());
     }
 
     @Test

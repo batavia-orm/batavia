@@ -1,5 +1,4 @@
 package com.batavia.orm.cli;
-
 import com.batavia.orm.runner.RunnerMain;
 
 // Concrete command for migrating

@@ -22,9 +22,8 @@ public class CLI {
     }
 
     private static void startCLI() {
-        // make instance from the scanner class instead of the buferred reader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
+    
         while (true) {
             try {
                 System.out.print("Please provide a command: ");
@@ -35,11 +34,16 @@ public class CLI {
                     break;
                 }
     
-                // Parse user input and create the appropriate command
                 String[] args = userInput.split("\\s+");
+    
+                // Check for exit command again
+                if (args.length == 1 && (args[0].equalsIgnoreCase("exit") || args[0].equalsIgnoreCase("quit"))) {
+                    System.out.println("Exiting...");
+                    break;
+                }
+    
                 Command command = parseCommand(args);
     
-                // Execute the command
                 if (command != null) {
                     command.execute();
                 } else {
