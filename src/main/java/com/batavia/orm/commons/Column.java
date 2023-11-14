@@ -8,7 +8,7 @@ public class Column {
 
   public Column(String columnName, String columnType, Boolean isPrimaryColumn, Boolean isUnique) {
     this.columnName = columnName;
-    this.columnType = columnType;
+    this.columnType = Types.getSqlType(columnType);
     this.isPrimaryColumn = isPrimaryColumn;
     this.isUnique = isUnique;
   }

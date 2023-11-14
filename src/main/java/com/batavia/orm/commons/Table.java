@@ -15,6 +15,10 @@ public class Table {
     return tableName;
   }
 
+  public HashMap<String, Column> getColumn() {
+    return this.columns;
+  }
+
   public void addColumn(Column column) {
     this.columns.put(column.getColumnName(), column);
   }
