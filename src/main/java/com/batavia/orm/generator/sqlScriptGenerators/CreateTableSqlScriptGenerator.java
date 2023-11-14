@@ -30,6 +30,10 @@ public class CreateTableSqlScriptGenerator implements ISqlScriptGenerator {
       String columnAttributes =
         "\t" + column.getColumnName() + " " + column.getColumnType();
 
+      if (column.isPrimary()) {
+        columnAttributes += " " + "PRIMARY KEY";
+      }
+
       createTableScriptBuilder.append(String.format("%s", columnAttributes));
 
       if (mapIndex < tableColumns.size() - 1) {

@@ -48,7 +48,7 @@ public class GeneratorMainTest {
     SqlCommandContext createTable = SqlCommandContext.CREATE_TABLE;
     mainGenerator.runSqlScriptGeneratorToFile(createTable, null);
     String upExpectedScriptContent =
-      "CREATE TABLE users (\n" + "\tid INT\n" + ");" + "\n\n";
+      "CREATE TABLE users (\n" + "\tid INT PRIMARY KEY\n" + ");" + "\n\n";
 
     String upFileContent = new String(
       Files.readAllBytes(Paths.get(upMigrationFilePath))
@@ -84,7 +84,7 @@ public class GeneratorMainTest {
     );
 
     String downExpectedScriptContent =
-      "CREATE TABLE users (\n" + "\tid INT\n" + ");" + "\n\n";
+      "CREATE TABLE users (\n" + "\tid INT PRIMARY KEY\n" + ");" + "\n\n";
 
     String downFileContent = new String(
       Files.readAllBytes(Paths.get(downMigrationFilePath))

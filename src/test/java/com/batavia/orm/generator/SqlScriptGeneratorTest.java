@@ -15,7 +15,7 @@ public class SqlScriptGeneratorTest {
     CreateTableSqlScriptGenerator scriptGenerator = new CreateTableSqlScriptGenerator();
     String script = scriptGenerator.generateSqlScript(table);
     String expectedScript =
-      "CREATE TABLE users (\n" + "\tid INT\n" + ");" + "\n";
+      "CREATE TABLE users (\n" + "\tid INT PRIMARY KEY\n" + ");" + "\n";
 
     assertEquals(expectedScript, script);
   }
