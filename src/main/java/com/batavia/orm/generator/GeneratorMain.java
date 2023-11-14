@@ -44,34 +44,34 @@ public class GeneratorMain {
     Optional<AlterTableContext> optionalParameter = Optional.ofNullable(
       optionalAlterTableContext
     );
-    AlterTableContext AlterTableContext = optionalParameter.isPresent()
+    AlterTableContext alterTableContext = optionalParameter.isPresent()
       ? optionalParameter.get()
       : null;
 
-    writeUpSqlScript(sqlCommand, AlterTableContext);
-    writeDownSqlScript(sqlCommand, AlterTableContext);
+    writeUpSqlScript(sqlCommand, alterTableContext);
+    writeDownSqlScript(sqlCommand, alterTableContext);
   }
 
   private void writeUpSqlScript(
     SqlCommandContext sqlCommand,
-    AlterTableContext AlterTableContext
+    AlterTableContext alterTableContext
   ) {
     String upScript = sqlCommand.runSqlScriptGenerator(
       sqlScriptGenerator,
       this.tableToBeApplied,
       this.columnsToBeApplied,
-      AlterTableContext
+      alterTableContext
     );
     Utils.writeToUpMigrationFile(this.upMigrationFilePath, upScript);
   }
 
   private void writeDownSqlScript(
     SqlCommandContext upSqlCommand,
-    AlterTableContext AlterTableContext
+    AlterTableContext alterTableContext
   ) {
     Object[] downContext = getDownSqlScriptContext(
       upSqlCommand,
-      AlterTableContext
+      alterTableContext
     );
 
     SqlCommandContext downSqlCommand = (SqlCommandContext) downContext[0];

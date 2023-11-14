@@ -1,18 +1,17 @@
 package com.batavia.orm;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class App {
-    private static final Dotenv dotenv = Dotenv.configure()
-            .directory("C:\\Users\\alvin\\OneDrive\\Desktop\\batavia\\batavia\\.env").load();
+    private static final Dotenv dotenv = Dotenv.configure().directory("batavia\\.env").load();
     private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
 
     public static void main(String[] args) {
@@ -25,10 +24,9 @@ public class App {
             connection = DriverManager.getConnection(DATABASE_URL);
             System.out.println("Connected to the PostgreSQL server successfully.");
             statement = connection.createStatement();
-            
+
             // Read the migration SQL script from file
-            String migrationScript = readMigrationScript(
-                    "C:\\Users\\alvin\\OneDrive\\Desktop\\batavia\\batavia\\src\\main\\java\\com\\batavia\\orm\\migration.sql");
+            String migrationScript = readMigrationScript("batavia\\src\\main\\java\\com\\batavia\\orm\\migration.sql");
 
             // Execute the migration script
             statement.executeUpdate(migrationScript);
