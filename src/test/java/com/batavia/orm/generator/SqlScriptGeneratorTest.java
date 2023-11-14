@@ -1,10 +1,10 @@
 package com.batavia.orm.generator;
 
-import com.batavia.orm.commons.Column;
-import com.batavia.orm.commons.Table;
+import static org.junit.Assert.assertEquals;
+
+import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 public class SqlScriptGeneratorTest {
 
@@ -17,7 +17,7 @@ public class SqlScriptGeneratorTest {
     String expectedScript =
       "CREATE TABLE users (\n" + "\tid INT\n" + ");" + "\n";
 
-    Assertions.assertEquals(expectedScript, script);
+    assertEquals(expectedScript, script);
   }
 
   @Test
@@ -27,7 +27,7 @@ public class SqlScriptGeneratorTest {
     String script = scriptGenerator.generateSqlScript(table);
     String expectedScript = "DROP TABLE users;" + "\n";
 
-    Assertions.assertEquals(expectedScript, script);
+    assertEquals(expectedScript, script);
   }
 
   @Test
@@ -36,13 +36,13 @@ public class SqlScriptGeneratorTest {
     Column[] columnsToAdd = new Column[2];
     columnsToAdd[0] = new Column("email", "VARCHAR(200)", false, false);
     columnsToAdd[1] = new Column("age", "INT", false, false);
-    AlterTableCategory alterTableCategory = AlterTableCategory.ADD_COLUMN;
+    AlterTableContext alterTableContext = AlterTableContext.ADD_COLUMN;
     AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
 
     String script = scriptGenerator.generateSqlScript(
       table,
       columnsToAdd,
-      alterTableCategory
+      alterTableContext
     );
     String expectedScript =
       "ALTER TABLE users\n" +
@@ -50,7 +50,7 @@ public class SqlScriptGeneratorTest {
       "ADD COLUMN age INT;" +
       "\n";
 
-    Assertions.assertEquals(expectedScript, script);
+    assertEquals(expectedScript, script);
   }
 
   @Test
@@ -65,13 +65,13 @@ public class SqlScriptGeneratorTest {
     columnsToDrop[0] = column1;
     columnsToDrop[1] = column2;
 
-    AlterTableCategory alterTableCategory = AlterTableCategory.DROP_COLUMN;
+    AlterTableContext alterTableContext = AlterTableContext.DROP_COLUMN;
     AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
 
     String script = scriptGenerator.generateSqlScript(
       table,
       columnsToDrop,
-      alterTableCategory
+      alterTableContext
     );
     String expectedScript =
       "ALTER TABLE users\n" +
@@ -79,6 +79,6 @@ public class SqlScriptGeneratorTest {
       "DROP COLUMN age;" +
       "\n";
 
-    Assertions.assertEquals(expectedScript, script);
+    assertEquals(expectedScript, script);
   }
 }

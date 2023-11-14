@@ -3,7 +3,7 @@ package com.batavia.orm.generator;
 import static org.junit.Assert.assertEquals;
 
 import com.batavia.orm.commons.*;
-import com.batavia.orm.generator.sqlScriptGenerators.AlterTableCategory;
+import com.batavia.orm.generator.sqlScriptGenerators.AlterTableContext;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,7 +45,7 @@ public class GeneratorMainTest {
       downMigrationFilePath
     );
 
-    SqlCommandCategory createTable = SqlCommandCategory.CREATE_TABLE;
+    SqlCommandContext createTable = SqlCommandContext.CREATE_TABLE;
     mainGenerator.runSqlScriptGeneratorToFile(createTable, null);
     String upExpectedScriptContent =
       "CREATE TABLE users (\n" + "\tid INT\n" + ");" + "\n\n";
@@ -75,7 +75,7 @@ public class GeneratorMainTest {
       downMigrationFilePath
     );
 
-    SqlCommandCategory dropTable = SqlCommandCategory.DROP_TABLE;
+    SqlCommandContext dropTable = SqlCommandContext.DROP_TABLE;
     mainGenerator.runSqlScriptGeneratorToFile(dropTable, null);
     String expectedScriptContent = "DROP TABLE users;" + "\n\n";
 
@@ -114,8 +114,8 @@ public class GeneratorMainTest {
       downMigrationFilePath
     );
 
-    SqlCommandCategory alterTable = SqlCommandCategory.ALTER_TABLE;
-    AlterTableCategory addColumn = AlterTableCategory.ADD_COLUMN;
+    SqlCommandContext alterTable = SqlCommandContext.ALTER_TABLE;
+    AlterTableContext addColumn = AlterTableContext.ADD_COLUMN;
 
     mainGenerator.runSqlScriptGeneratorToFile(alterTable, addColumn);
     String upExpectedScriptContent =
@@ -162,8 +162,8 @@ public class GeneratorMainTest {
       downMigrationFilePath
     );
 
-    SqlCommandCategory alterTable = SqlCommandCategory.ALTER_TABLE;
-    AlterTableCategory dropColumn = AlterTableCategory.DROP_COLUMN;
+    SqlCommandContext alterTable = SqlCommandContext.ALTER_TABLE;
+    AlterTableContext dropColumn = AlterTableContext.DROP_COLUMN;
 
     mainGenerator.runSqlScriptGeneratorToFile(alterTable, dropColumn);
 

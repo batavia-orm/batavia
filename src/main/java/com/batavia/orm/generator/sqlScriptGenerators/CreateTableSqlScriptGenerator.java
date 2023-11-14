@@ -48,7 +48,7 @@ public class CreateTableSqlScriptGenerator implements ISqlScriptGenerator {
   public String generateSqlScript(
     Table table,
     Column[] columns,
-    AlterTableCategory alterType
+    AlterTableContext alterType
   ) {
     throw new UnsupportedOperationException(
       "Unimplemented method parameters for this object"

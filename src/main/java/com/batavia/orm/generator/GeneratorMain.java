@@ -1,7 +1,7 @@
 package com.batavia.orm.generator;
 
 import com.batavia.orm.commons.*;
-import com.batavia.orm.generator.sqlScriptGenerators.AlterTableCategory;
+import com.batavia.orm.generator.sqlScriptGenerators.*;
 import com.batavia.orm.utils.Utils;
 import java.util.Optional;
 
@@ -13,6 +13,7 @@ public class GeneratorMain {
   private Column[] columnsToBeApplied;
   private String upMigrationFilePath;
   private String downMigrationFilePath;
+  private static ISqlScriptGenerator sqlScriptGenerator;
 
   public GeneratorMain(
     Table table,
@@ -37,63 +38,98 @@ public class GeneratorMain {
   }
 
   public void runSqlScriptGeneratorToFile(
-    SqlCommandCategory sqlCommand,
-    AlterTableCategory optionalAlterTableCategory
+    SqlCommandContext sqlCommand,
+    AlterTableContext optionalAlterTableContext
   ) {
-    Optional<AlterTableCategory> optionalParameter = Optional.ofNullable(
-      optionalAlterTableCategory
+    Optional<AlterTableContext> optionalParameter = Optional.ofNullable(
+      optionalAlterTableContext
     );
-    AlterTableCategory alterTableCategory = optionalParameter.isPresent()
+    AlterTableContext AlterTableContext = optionalParameter.isPresent()
       ? optionalParameter.get()
       : null;
 
-    writeUpSqlScript(sqlCommand, alterTableCategory);
-    writeDownSqlScript(sqlCommand, alterTableCategory);
+    writeUpSqlScript(sqlCommand, AlterTableContext);
+    writeDownSqlScript(sqlCommand, AlterTableContext);
   }
 
   private void writeUpSqlScript(
-    SqlCommandCategory sqlCommand,
-    AlterTableCategory alterTableCategory
+    SqlCommandContext sqlCommand,
+    AlterTableContext AlterTableContext
   ) {
     String upScript = sqlCommand.runSqlScriptGenerator(
+      sqlScriptGenerator,
       this.tableToBeApplied,
       this.columnsToBeApplied,
-      alterTableCategory
+      AlterTableContext
     );
     Utils.writeToUpMigrationFile(this.upMigrationFilePath, upScript);
   }
 
   private void writeDownSqlScript(
-    SqlCommandCategory sqlCommand,
-    AlterTableCategory alterTableCategory
+    SqlCommandContext upSqlCommand,
+    AlterTableContext AlterTableContext
   ) {
-    // initialize
-    SqlCommandCategory downSqlCommand = sqlCommand;
-    AlterTableCategory downAlterTableCategory = alterTableCategory;
+    Object[] downContext = getDownSqlScriptContext(
+      upSqlCommand,
+      AlterTableContext
+    );
 
-    // take the opposite for down
-    if (sqlCommand == SqlCommandCategory.CREATE_TABLE) {
-      downSqlCommand = SqlCommandCategory.DROP_TABLE;
-    } else if (sqlCommand == SqlCommandCategory.DROP_TABLE) {
-      downSqlCommand = SqlCommandCategory.CREATE_TABLE;
-    } else if (sqlCommand == SqlCommandCategory.ALTER_TABLE) {
-      if (alterTableCategory == null) {
-        System.out.println("Alter table command needs the category!");
-        return;
-      }
+    SqlCommandContext downSqlCommand = (SqlCommandContext) downContext[0];
+    AlterTableContext downAlterTableContext = (AlterTableContext) downContext[1];
 
-      if (alterTableCategory == AlterTableCategory.ADD_COLUMN) {
-        downAlterTableCategory = AlterTableCategory.DROP_COLUMN;
-      } else if (alterTableCategory == AlterTableCategory.DROP_COLUMN) {
-        downAlterTableCategory = AlterTableCategory.ADD_COLUMN;
-      }
+    if (downSqlCommand == null && downAlterTableContext == null) {
+      return;
     }
 
     String downScript = downSqlCommand.runSqlScriptGenerator(
+      sqlScriptGenerator,
       this.tableToBeApplied,
       this.columnsToBeApplied,
-      downAlterTableCategory
+      downAlterTableContext
     );
+
     Utils.writeToDownMigrationFile(this.downMigrationFilePath, downScript);
+  }
+
+  private Object[] getDownSqlScriptContext(
+    SqlCommandContext sqlCommand,
+    AlterTableContext alterTableContext
+  ) {
+
+    Object[] contextResult = new Object[2];
+
+    switch (sqlCommand) {
+      case CREATE_TABLE:
+        contextResult[0] = SqlCommandContext.DROP_TABLE;
+        contextResult[1] = null;
+        break;
+      case DROP_TABLE:
+        contextResult[0] = SqlCommandContext.CREATE_TABLE;
+        contextResult[1] = null;
+        break;
+      case ALTER_TABLE:
+        if (alterTableContext == null) {
+          System.out.println("Alter table command needs the category!");
+          return null;
+        }
+
+        switch (alterTableContext) {
+          case ADD_COLUMN:
+            contextResult[0] = SqlCommandContext.ALTER_TABLE;
+            contextResult[1] = AlterTableContext.DROP_COLUMN;
+            break;
+          case DROP_COLUMN:
+            contextResult[0] = SqlCommandContext.ALTER_TABLE;
+            contextResult[1] = AlterTableContext.ADD_COLUMN;
+            break;
+          default:
+            return null;
+        }
+        break;
+      default:
+        return null;
+    }
+
+    return contextResult;
   }
 }

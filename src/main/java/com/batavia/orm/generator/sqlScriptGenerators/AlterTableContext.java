@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.batavia.orm.commons.*;
 
-public enum AlterTableCategory {
+public enum AlterTableContext {
     ADD_COLUMN,
     DROP_COLUMN,
     OTHERS;

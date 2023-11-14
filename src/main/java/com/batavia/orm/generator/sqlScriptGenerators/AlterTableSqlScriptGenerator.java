@@ -7,7 +7,7 @@ public class AlterTableSqlScriptGenerator implements ISqlScriptGenerator {
   public String generateSqlScript(
     Table table,
     Column[] columns,
-    AlterTableCategory alterType
+    AlterTableContext alterType
   ) {
     String script = "";
 
