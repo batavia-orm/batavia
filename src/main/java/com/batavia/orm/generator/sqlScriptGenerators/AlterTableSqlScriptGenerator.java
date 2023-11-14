@@ -1,17 +1,19 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
+import java.util.ArrayList;
+
 import com.batavia.orm.commons.*;
 
 public class AlterTableSqlScriptGenerator implements ISqlScriptGenerator {
 
   public String generateSqlScript(
     Table table,
-    Column[] columns,
+    ArrayList<Column> columns,
     AlterTableContext alterType
   ) {
     String script = "";
 
-    if (alterType == null) {
+    if (alterType == AlterTableContext.NONE) {
       return script;
     }
 

@@ -3,14 +3,14 @@ package com.batavia.orm.generator;
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
 import com.batavia.orm.utils.Utils;
-import java.util.Optional;
+import java.util.ArrayList;
 
 // Strategy PATTERN
 
 public class GeneratorMain {
 
   private Table tableToBeApplied;
-  private Column[] columnsToBeApplied;
+  private ArrayList<Column> columnsToBeApplied;
   private String upMigrationFilePath;
   private String downMigrationFilePath;
   private static ISqlScriptGenerator sqlScriptGenerator;
@@ -27,7 +27,7 @@ public class GeneratorMain {
 
   public GeneratorMain(
     Table table,
-    Column[] columns,
+    ArrayList<Column> columns,
     String upMigrationFilePath,
     String downMigrationFilePath
   ) {
@@ -39,15 +39,8 @@ public class GeneratorMain {
 
   public void runSqlScriptGeneratorToFile(
     SqlCommandContext sqlCommand,
-    AlterTableContext optionalAlterTableContext
+    AlterTableContext alterTableContext
   ) {
-    Optional<AlterTableContext> optionalParameter = Optional.ofNullable(
-      optionalAlterTableContext
-    );
-    AlterTableContext alterTableContext = optionalParameter.isPresent()
-      ? optionalParameter.get()
-      : null;
-
     writeUpSqlScript(sqlCommand, alterTableContext);
     writeDownSqlScript(sqlCommand, alterTableContext);
   }
@@ -107,18 +100,18 @@ public class GeneratorMain {
         contextResult[1] = null;
         break;
       case ALTER_TABLE:
-        if (alterTableContext == null) {
+        if (alterTableContext == AlterTableContext.NONE) {
           System.out.println("Alter table command needs the category!");
           return null;
         }
 
+        contextResult[0] = SqlCommandContext.ALTER_TABLE;
+
         switch (alterTableContext) {
           case ADD_COLUMN:
-            contextResult[0] = SqlCommandContext.ALTER_TABLE;
             contextResult[1] = AlterTableContext.DROP_COLUMN;
             break;
           case DROP_COLUMN:
-            contextResult[0] = SqlCommandContext.ALTER_TABLE;
             contextResult[1] = AlterTableContext.ADD_COLUMN;
             break;
           default:

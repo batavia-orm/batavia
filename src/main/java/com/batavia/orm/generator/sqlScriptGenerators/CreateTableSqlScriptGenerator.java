@@ -1,6 +1,8 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
 import com.batavia.orm.commons.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +53,7 @@ public class CreateTableSqlScriptGenerator implements ISqlScriptGenerator {
   @Override
   public String generateSqlScript(
     Table table,
-    Column[] columns,
+    ArrayList<Column> columns,
     AlterTableContext alterType
   ) {
     throw new UnsupportedOperationException(

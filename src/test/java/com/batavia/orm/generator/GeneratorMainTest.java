@@ -7,6 +7,7 @@ import com.batavia.orm.generator.sqlScriptGenerators.AlterTableContext;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import org.junit.jupiter.api.*;
 
 public class GeneratorMainTest {
@@ -46,7 +47,8 @@ public class GeneratorMainTest {
     );
 
     SqlCommandContext createTable = SqlCommandContext.CREATE_TABLE;
-    mainGenerator.runSqlScriptGeneratorToFile(createTable, null);
+    AlterTableContext alterTableContext = AlterTableContext.NONE;
+    mainGenerator.runSqlScriptGeneratorToFile(createTable, alterTableContext);
     String upExpectedScriptContent =
       "CREATE TABLE users (\n" + "\tid INT PRIMARY KEY\n" + ");" + "\n\n";
 
@@ -76,7 +78,8 @@ public class GeneratorMainTest {
     );
 
     SqlCommandContext dropTable = SqlCommandContext.DROP_TABLE;
-    mainGenerator.runSqlScriptGeneratorToFile(dropTable, null);
+    AlterTableContext alterTableContext = AlterTableContext.NONE;
+    mainGenerator.runSqlScriptGeneratorToFile(dropTable, alterTableContext);
     String expectedScriptContent = "DROP TABLE users;" + "\n\n";
 
     String fileContent = new String(
@@ -103,9 +106,9 @@ public class GeneratorMainTest {
     table.addColumn(column1);
     table.addColumn(column2);
 
-    Column[] columnsToAdd = new Column[2];
-    columnsToAdd[0] = column1;
-    columnsToAdd[1] = column2;
+    ArrayList<Column> columnsToAdd = new ArrayList<Column>();
+    columnsToAdd.add(column1);
+    columnsToAdd.add(column2);
 
     GeneratorMain mainGenerator = new GeneratorMain(
       table,
@@ -151,9 +154,9 @@ public class GeneratorMainTest {
     table.addColumn(column1);
     table.addColumn(column2);
 
-    Column[] columnsToDrop = new Column[2];
-    columnsToDrop[0] = column1;
-    columnsToDrop[1] = column2;
+    ArrayList<Column> columnsToDrop = new ArrayList<Column>();
+    columnsToDrop.add(column1);
+    columnsToDrop.add(column2);
 
     GeneratorMain mainGenerator = new GeneratorMain(
       table,

@@ -1,14 +1,16 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
 import com.batavia.orm.commons.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public enum AlterTableContext {
   ADD_COLUMN,
   DROP_COLUMN,
-  OTHERS;
+  NONE;
 
-  public String getScriptAccordingToAlterType(Table table, Column[] columns) {
+  public String getScriptAccordingToAlterType(Table table, ArrayList<Column> columns) {
     String script = "";
 
     if (this == ADD_COLUMN) {
@@ -20,7 +22,7 @@ public enum AlterTableContext {
     return script;
   }
 
-  private static String generateAddColumnScript(Table table, Column[] columns) {
+  private static String generateAddColumnScript(Table table, ArrayList<Column> columns) {
     /**
      * FORMAT:
      * ALTER TABLE table_name
@@ -35,14 +37,14 @@ public enum AlterTableContext {
       String.format("ALTER TABLE %s\n", tableName)
     );
 
-    int numberOfColumnsToAdd = columns.length;
+    int numberOfColumnsToAdd = columns.size();
     for (int i = 0; i < numberOfColumnsToAdd; i++) {
       try {
         alterTableAddColumnsBuilder.append(
           String.format(
             "ADD COLUMN %s %s",
-            columns[i].getColumnName(),
-            columns[i].getColumnType()
+            columns.get(i).getColumnName(),
+            columns.get(i).getColumnType()
           )
         );
 
@@ -61,7 +63,7 @@ public enum AlterTableContext {
 
   private static String generateDropColumnScript(
     Table table,
-    Column[] columns
+    ArrayList<Column> columns
   ) {
     /**
      * FORMAT:
@@ -74,14 +76,14 @@ public enum AlterTableContext {
     String tableName = table.getTableName();
     HashMap<String, Column> tableColumns = table.getColumns();
 
-    int numberOfColumnsToDrop = columns.length;
+    int numberOfColumnsToDrop = columns.size();
     StringBuilder alterTableDropColumnsBuilder = new StringBuilder(
       String.format("ALTER TABLE %s\n", tableName)
     );
 
     for (int i = 0; i < numberOfColumnsToDrop; i++) {
       try {
-        Column column = tableColumns.get(columns[i].getColumnName());
+        Column column = tableColumns.get(columns.get(i).getColumnName());
         alterTableDropColumnsBuilder.append(
           String.format("DROP COLUMN %s", column.getColumnName())
         );

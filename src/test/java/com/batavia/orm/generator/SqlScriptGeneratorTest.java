@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
+import java.util.ArrayList;
 import org.junit.jupiter.api.*;
 
 public class SqlScriptGeneratorTest {
@@ -33,9 +34,9 @@ public class SqlScriptGeneratorTest {
   @Test
   public void testAlterTableSqlScriptGenerator_addColumn() throws Exception {
     Table table = new Table("users");
-    Column[] columnsToAdd = new Column[2];
-    columnsToAdd[0] = new Column("email", "VARCHAR(200)", false, false);
-    columnsToAdd[1] = new Column("age", "INT", false, false);
+    ArrayList<Column> columnsToAdd = new ArrayList<Column>();
+    columnsToAdd.add(new Column("email", "VARCHAR(200)", false, false));
+    columnsToAdd.add(new Column("age", "INT", false, false));
     AlterTableContext alterTableContext = AlterTableContext.ADD_COLUMN;
     AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
 
@@ -62,9 +63,9 @@ public class SqlScriptGeneratorTest {
     table.addColumn(column1);
     table.addColumn(column2);
 
-    Column[] columnsToDrop = new Column[2];
-    columnsToDrop[0] = column1;
-    columnsToDrop[1] = column2;
+    ArrayList<Column> columnsToDrop = new ArrayList<Column>();
+    columnsToDrop.add(column1);
+    columnsToDrop.add(column2);
 
     AlterTableContext alterTableContext = AlterTableContext.DROP_COLUMN;
     AlterTableSqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();

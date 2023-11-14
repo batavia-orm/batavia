@@ -1,5 +1,7 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
+import java.util.ArrayList;
+
 import com.batavia.orm.commons.*;
 
 public class DropTableSqlScriptGenerator implements ISqlScriptGenerator {
@@ -16,7 +18,7 @@ public class DropTableSqlScriptGenerator implements ISqlScriptGenerator {
   @Override
   public String generateSqlScript(
     Table table,
-    Column[] columns,
+    ArrayList<Column> columns,
     AlterTableContext alterType
   ) {
     throw new UnsupportedOperationException(

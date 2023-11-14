@@ -1,5 +1,7 @@
 package com.batavia.orm.generator;
 
+import java.util.ArrayList;
+
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
 
@@ -12,7 +14,7 @@ public enum SqlCommandContext {
   public String runSqlScriptGenerator(
     ISqlScriptGenerator sqlScriptGenerator,
     Table table,
-    Column[] columns,
+    ArrayList<Column> columns,
     AlterTableContext alterType
   ) {
     String script = "";
