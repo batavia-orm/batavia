@@ -15,18 +15,6 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 
 public class DataSourceParser {
-  public static void main(String[] args) throws IOException {
-    DataSourceParser parser = new DataSourceParser("/Users/enryleinhard/Projects/JavaSourceCode");
-    HashMap<String, Table> tables = parser.findAllEntities();
-    for (String tableName : tables.keySet()) {
-      Table table = tables.get(tableName);
-      System.out.println(table.getTableName());
-      for (Column column : table.getColumn().values()) {
-        System.out.println(column.getColumnName() + " " + column.getColumnType() + " " + column.isPrimary() + " " + column.isUnique());
-      }
-    }
-  }
-
   private String dataSourcePath;
 
   public DataSourceParser(String dataSourcePath) {
