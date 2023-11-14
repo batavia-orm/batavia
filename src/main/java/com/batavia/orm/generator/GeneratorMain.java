@@ -95,7 +95,6 @@ public class GeneratorMain {
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
   ) {
-
     Object[] contextResult = new Object[2];
 
     switch (sqlCommand) {

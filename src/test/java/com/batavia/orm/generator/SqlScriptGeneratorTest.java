@@ -44,6 +44,7 @@ public class SqlScriptGeneratorTest {
       columnsToAdd,
       alterTableContext
     );
+
     String expectedScript =
       "ALTER TABLE users\n" +
       "ADD COLUMN email VARCHAR(200),\n" +
@@ -73,6 +74,7 @@ public class SqlScriptGeneratorTest {
       columnsToDrop,
       alterTableContext
     );
+
     String expectedScript =
       "ALTER TABLE users\n" +
       "DROP COLUMN email,\n" +
