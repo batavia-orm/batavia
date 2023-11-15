@@ -11,8 +11,9 @@ public enum SqlCommandContext {
   ALTER_TABLE,
   OTHERS;
 
+  private static ISqlScriptGenerator sqlScriptGenerator;
+
   public String runSqlScriptGenerator(
-    ISqlScriptGenerator sqlScriptGenerator,
     Table table,
     ArrayList<Column> columns,
     AlterTableContext alterType

@@ -13,7 +13,6 @@ public class GeneratorMain {
   private ArrayList<Column> columnsToBeApplied;
   private String upMigrationFilePath;
   private String downMigrationFilePath;
-  private static ISqlScriptGenerator sqlScriptGenerator;
 
   public GeneratorMain(
     Table table,
@@ -50,7 +49,6 @@ public class GeneratorMain {
     AlterTableContext alterTableContext
   ) {
     String upScript = sqlCommand.runSqlScriptGenerator(
-      sqlScriptGenerator,
       this.tableToBeApplied,
       this.columnsToBeApplied,
       alterTableContext
@@ -75,7 +73,6 @@ public class GeneratorMain {
     }
 
     String downScript = downSqlCommand.runSqlScriptGenerator(
-      sqlScriptGenerator,
       this.tableToBeApplied,
       this.columnsToBeApplied,
       downAlterTableContext
