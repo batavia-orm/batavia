@@ -1,27 +1,43 @@
 package com.batavia.orm.utils;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Utils {
 
-    public static void writeToMigrationFile(String fileName, String migrationScript) {
-        String MIGRATION_DIR="migrations"; // will change to dotenv
-        String timestamp = Long.toString(System.currentTimeMillis());
-
-        // optional file name set default
-        if (fileName.length() == 0) {
-            fileName="migration-filename";
-        }
-
-        // Format: timestamp-filename.sql (e.g. 167493743947-create-table-employees.sql)
-        String filePath = String.format("%s/%s-%s.sql",MIGRATION_DIR, timestamp, fileName);
-
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(migrationScript);
-            System.out.println("File created: " + filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  public static void writeToUpMigrationFile(
+    String filePath,
+    String migrationScript
+  ) {
+    try (
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))
+    ) {
+      writer.write(migrationScript + "\n");
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.err.println(
+        "An error occurred while writing to the file: " + e.getMessage()
+      );
     }
+  }
+
+  public static void writeToDownMigrationFile(
+    String filePath,
+    String migrationScript
+  ) {
+    try {
+      String currentFileContent = new String(
+        Files.readAllBytes(Paths.get(filePath))
+      );
+      String newContent = currentFileContent + migrationScript + "\n";
+      Files.write(Paths.get(filePath), newContent.getBytes());
+    } catch (IOException e) {
+      System.err.println(
+        "An error occurred while writing to the file: " + e.getMessage()
+      );
+    }
+  }
 }
