@@ -12,7 +12,7 @@ public class DropTableSqlScriptGenerator implements ISqlScriptGenerator {
       "DROP TABLE %s;\n",
       table.getTableName()
     );
-    return dropTableScript.toString();
+    return dropTableScript.toString() + "\n";
   }
 
   @Override

@@ -1,14 +1,14 @@
 package com.batavia.orm.generator;
 
-import java.util.ArrayList;
-
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
+import java.util.ArrayList;
 
 public enum SqlCommandContext {
   CREATE_TABLE,
   DROP_TABLE,
   ALTER_TABLE,
+  NONE,
   OTHERS;
 
   private static ISqlScriptGenerator sqlScriptGenerator;
@@ -27,14 +27,11 @@ public enum SqlCommandContext {
       script = sqlScriptGenerator.generateSqlScript(table);
     } else if (this == ALTER_TABLE) {
       sqlScriptGenerator = new AlterTableSqlScriptGenerator();
-      try {
-        script =
-          sqlScriptGenerator.generateSqlScript(table, columns, alterType);
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-      }
+      script = sqlScriptGenerator.generateSqlScript(table, columns, alterType);
     } else if (this == OTHERS) {
       System.out.println("This sql command is not yet being supported");
+    } else {
+      System.out.println("No sql command!");
     }
 
     return script;

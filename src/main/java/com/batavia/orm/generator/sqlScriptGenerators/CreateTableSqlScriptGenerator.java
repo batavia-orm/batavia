@@ -47,7 +47,7 @@ public class CreateTableSqlScriptGenerator implements ISqlScriptGenerator {
 
     createTableScriptBuilder.append("\n);\n");
 
-    return createTableScriptBuilder.toString();
+    return createTableScriptBuilder.toString() + "\n";
   }
 
   @Override

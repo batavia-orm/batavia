@@ -35,8 +35,103 @@ public class GeneratorMainTest {
     }
   }
 
+  @Test // null sql command null alter table context
+  public void tesRunSqlScriptGeneratorToFileNullParameters_1()
+    throws Exception {
+    Table table = new Table("users");
+    table.addColumn(new Column("id", "INT", true, true));
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    mainGenerator.runSqlScriptGeneratorToFile(null, null);
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test // null sql command non null alter table context
+  public void tesRunSqlScriptGeneratorToFileNullSqlCommand_2()
+    throws Exception {
+    Table table = new Table("users");
+    table.addColumn(new Column("id", "INT", true, true));
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    mainGenerator.runSqlScriptGeneratorToFile(
+      null,
+      AlterTableContext.ADD_COLUMN
+    );
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test // non-null sql command null alter table context
+  public void tesRunSqlScriptGeneratorToFileNullAlterType_3() throws Exception {
+    Table table = new Table("users");
+    table.addColumn(new Column("id", "INT", true, true));
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    mainGenerator.runSqlScriptGeneratorToFile(
+      SqlCommandContext.CREATE_TABLE,
+      null
+    );
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
   @Test
-  public void tesRunSqlScriptGeneratorToFile_CreateTable() throws Exception {
+  public void tesRunSqlScriptGeneratorToFileCreateTable_4() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
 
@@ -67,7 +162,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFile_DropTable() throws Exception {
+  public void tesRunSqlScriptGeneratorToFileDropTable_5() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
 
@@ -98,7 +193,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFile_AlterTableAddColumn()
+  public void tesRunSqlScriptGeneratorToFileAlterTableAddColumn_6()
     throws Exception {
     Table table = new Table("users");
     Column column1 = new Column("id", "INT", true, true);
@@ -146,7 +241,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFile_AlterTableDropColumn()
+  public void tesRunSqlScriptGeneratorToFileAlterTableDropColumn_7()
     throws Exception {
     Table table = new Table("users");
     Column column1 = new Column("id", "INT", true, true);
@@ -185,6 +280,148 @@ public class GeneratorMainTest {
       "ADD COLUMN id INT,\n" +
       "ADD COLUMN name VARCHAR(200);" +
       "\n\n";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test
+  public void tesRunSqlScriptGeneratorToFileAlterTableNone_8()
+    throws Exception {
+    Table table = new Table("users");
+    ArrayList<Column> columns = new ArrayList<Column>();
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      columns,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    SqlCommandContext alterTable = SqlCommandContext.ALTER_TABLE;
+    AlterTableContext none = AlterTableContext.NONE;
+
+    mainGenerator.runSqlScriptGeneratorToFile(alterTable, none);
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test
+  public void tesRunSqlScriptGeneratorToFileAlterTableOthers_9()
+    throws Exception {
+    Table table = new Table("users");
+    ArrayList<Column> columns = new ArrayList<Column>();
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      columns,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    SqlCommandContext alterTable = SqlCommandContext.ALTER_TABLE;
+    AlterTableContext alterTableContext = AlterTableContext.OTHERS;
+
+    mainGenerator.runSqlScriptGeneratorToFile(alterTable, alterTableContext);
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test
+  public void tesRunSqlScriptGeneratorToFileSqlCommandOthers_10()
+    throws Exception {
+    Table table = new Table("users");
+    ArrayList<Column> columns = new ArrayList<Column>();
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      columns,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    SqlCommandContext otherSqlCommand = SqlCommandContext.OTHERS;
+    AlterTableContext alterTableContext = AlterTableContext.NONE;
+
+    mainGenerator.runSqlScriptGeneratorToFile(
+      otherSqlCommand,
+      alterTableContext
+    );
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downMigrationFilePath))
+    );
+
+    assertEquals(upExpectedScriptContent, upFileContent);
+    assertEquals(downExpectedScriptContent, downFileContent);
+  }
+
+  @Test
+  public void tesRunSqlScriptGeneratorToFileSqlCommandNone_11()
+    throws Exception {
+    Table table = new Table("users");
+    ArrayList<Column> columns = new ArrayList<Column>();
+
+    GeneratorMain mainGenerator = new GeneratorMain(
+      table,
+      columns,
+      upMigrationFilePath,
+      downMigrationFilePath
+    );
+
+    SqlCommandContext otherSqlCommand = SqlCommandContext.NONE;
+    AlterTableContext alterTableContext = AlterTableContext.NONE;
+
+    mainGenerator.runSqlScriptGeneratorToFile(
+      otherSqlCommand,
+      alterTableContext
+    );
+
+    String upExpectedScriptContent = "";
+
+    String upFileContent = new String(
+      Files.readAllBytes(Paths.get(upMigrationFilePath))
+    );
+
+    String downExpectedScriptContent = "";
 
     String downFileContent = new String(
       Files.readAllBytes(Paths.get(downMigrationFilePath))

@@ -3,6 +3,7 @@ package com.batavia.orm.generator;
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
 import com.batavia.orm.utils.Utils;
+import java.io.IOException;
 import java.util.ArrayList;
 
 // Strategy PATTERN
@@ -11,7 +12,7 @@ public class GeneratorMain {
 
   private Table tableToBeApplied;
   private ArrayList<Column> columnsToBeApplied;
-  private String upMigrationFilePath;
+  String upMigrationFilePath;
   private String downMigrationFilePath;
 
   public GeneratorMain(
@@ -39,7 +40,12 @@ public class GeneratorMain {
   public void runSqlScriptGeneratorToFile(
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
-  ) {
+  ) throws IOException {
+    if (sqlCommand == null || alterTableContext == null) {
+      System.out.println("SQL command and Alter Table Context cannot be null!");
+      return;
+    }
+
     writeUpSqlScript(sqlCommand, alterTableContext);
     writeDownSqlScript(sqlCommand, alterTableContext);
   }
@@ -47,7 +53,7 @@ public class GeneratorMain {
   private void writeUpSqlScript(
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
-  ) {
+  ) throws IOException {
     String upScript = sqlCommand.runSqlScriptGenerator(
       this.tableToBeApplied,
       this.columnsToBeApplied,
@@ -59,18 +65,16 @@ public class GeneratorMain {
   private void writeDownSqlScript(
     SqlCommandContext upSqlCommand,
     AlterTableContext alterTableContext
-  ) {
-    Object[] downContext = getDownSqlScriptContext(
+  ) throws IOException {
+    ArrayList<Object> downContexts = getDownSqlScriptContext(
       upSqlCommand,
       alterTableContext
     );
 
-    SqlCommandContext downSqlCommand = (SqlCommandContext) downContext[0];
-    AlterTableContext downAlterTableContext = (AlterTableContext) downContext[1];
-
-    if (downSqlCommand == null && downAlterTableContext == null) {
-      return;
-    }
+    SqlCommandContext downSqlCommand = (SqlCommandContext) downContexts.get(0);
+    AlterTableContext downAlterTableContext = (AlterTableContext) downContexts.get(
+      1
+    );
 
     String downScript = downSqlCommand.runSqlScriptGenerator(
       this.tableToBeApplied,
@@ -81,42 +85,45 @@ public class GeneratorMain {
     Utils.writeToDownMigrationFile(this.downMigrationFilePath, downScript);
   }
 
-  private Object[] getDownSqlScriptContext(
+  private ArrayList<Object> getDownSqlScriptContext(
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
   ) {
-    Object[] contextResult = new Object[2];
+    ArrayList<Object> contextResult = new ArrayList<Object>();
 
     switch (sqlCommand) {
       case CREATE_TABLE:
-        contextResult[0] = SqlCommandContext.DROP_TABLE;
-        contextResult[1] = null;
+        contextResult.add(SqlCommandContext.DROP_TABLE);
+        contextResult.add(AlterTableContext.NONE);
         break;
       case DROP_TABLE:
-        contextResult[0] = SqlCommandContext.CREATE_TABLE;
-        contextResult[1] = null;
+        contextResult.add(SqlCommandContext.CREATE_TABLE);
+        contextResult.add(AlterTableContext.NONE);
         break;
       case ALTER_TABLE:
-        if (alterTableContext == AlterTableContext.NONE) {
-          System.out.println("Alter table command needs the category!");
-          return null;
-        }
-
-        contextResult[0] = SqlCommandContext.ALTER_TABLE;
+        contextResult.add(SqlCommandContext.ALTER_TABLE);
 
         switch (alterTableContext) {
           case ADD_COLUMN:
-            contextResult[1] = AlterTableContext.DROP_COLUMN;
+            contextResult.add(AlterTableContext.DROP_COLUMN);
             break;
           case DROP_COLUMN:
-            contextResult[1] = AlterTableContext.ADD_COLUMN;
+            contextResult.add(AlterTableContext.ADD_COLUMN);
+            break;
+          case OTHERS:
+            contextResult.add(AlterTableContext.OTHERS);
             break;
           default:
-            return null;
+            contextResult.add(AlterTableContext.NONE);
         }
         break;
+      case OTHERS:
+        contextResult.add(SqlCommandContext.OTHERS);
+        contextResult.add(AlterTableContext.NONE);
+        break;
       default:
-        return null;
+        contextResult.add(SqlCommandContext.NONE);
+        contextResult.add(AlterTableContext.NONE);
     }
 
     return contextResult;

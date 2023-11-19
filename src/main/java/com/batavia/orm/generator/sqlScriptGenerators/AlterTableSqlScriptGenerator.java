@@ -6,6 +6,7 @@ import com.batavia.orm.commons.*;
 
 public class AlterTableSqlScriptGenerator implements ISqlScriptGenerator {
 
+  @Override
   public String generateSqlScript(
     Table table,
     ArrayList<Column> columns,
@@ -13,11 +14,7 @@ public class AlterTableSqlScriptGenerator implements ISqlScriptGenerator {
   ) {
     String script = "";
 
-    if (alterType == AlterTableContext.NONE) {
-      return script;
-    }
-
-    script = alterType.getScriptAccordingToAlterType(table, columns) + "\n";
+    script = alterType.getScriptAccordingToAlterType(table, columns);
 
     return script;
   }

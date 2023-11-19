@@ -1,8 +1,7 @@
 package com.batavia.orm.generator.sqlScriptGenerators;
 
-import java.util.ArrayList;
-
 import com.batavia.orm.commons.*;
+import java.util.ArrayList;
 
 public interface ISqlScriptGenerator {
   public String generateSqlScript(Table table);
@@ -11,5 +10,5 @@ public interface ISqlScriptGenerator {
     Table table,
     ArrayList<Column> columns,
     AlterTableContext alterType
-  ) throws Exception;
+  );
 }
