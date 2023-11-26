@@ -57,6 +57,7 @@ public class MigrationRunner {
 
     public File[] getLocalMigrationFiles() {
         File migrationsDir = new File(migrations_dir);
+        System.out.println("Getting local migration files...");
         return migrationsDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".sql"));
     }
 
