@@ -12,10 +12,7 @@ import org.junit.jupiter.api.*;
 
 public class GeneratorMainTest {
 
-  private static final Dotenv dotenv = Dotenv
-    .configure()
-    .directory("C:\\Users\\alvin\\OneDrive\\Desktop\\batavia\\batavia\\.env")
-    .load();
+  private static final Dotenv dotenv = Dotenv.load();
 
   private static final String upMigrationFilePath = dotenv.get(
     "UP_MIGRATION_PATH"
