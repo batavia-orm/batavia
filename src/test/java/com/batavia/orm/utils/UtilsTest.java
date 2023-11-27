@@ -15,10 +15,7 @@ import org.junit.jupiter.api.*;
 
 public class UtilsTest {
 
-  private static final Dotenv dotenv = Dotenv
-    .configure()
-    .directory("C:\\Users\\alvin\\OneDrive\\Desktop\\batavia\\batavia\\.env")
-    .load();
+  private static final Dotenv dotenv = Dotenv.load();
 
   private static final String upMigrationFilePath = dotenv.get(
     "UP_MIGRATION_PATH"
@@ -79,7 +76,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testWriteToDownMigrationFile_1() throws Exception {
+  public void testWriteToDownMigrationFile_3() throws Exception {
     String mockedScript = "DROP TABLE users;" + "\n";
 
     Utils.writeToDownMigrationFile(upMigrationFilePath, mockedScript);
@@ -92,7 +89,7 @@ public class UtilsTest {
   }
 
   @Test
-  public void testWriteToDownMigrationFile_2() throws Exception {
+  public void testWriteToDownMigrationFile_4() throws Exception {
     String nonExistentPath = "non_existent_directory/down_migration.sql";
 
     String mockedScript = "DROP TABLE users;" + "\n";
