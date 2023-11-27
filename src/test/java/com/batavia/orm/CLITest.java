@@ -1,19 +1,18 @@
 package com.batavia.orm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import com.batavia.orm.cli.Command;
+import com.batavia.orm.cli.GenerateMigrationCommand;
+import com.batavia.orm.cli.MigrateCommand;
+import com.batavia.orm.cli.ShowMigrationsCommand;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.batavia.orm.cli.GenerateMigrationCommand;
-import com.batavia.orm.cli.MigrateCommand;
-import com.batavia.orm.cli.ShowMigrationsCommand;
-
-import static org.mockito.Mockito.*;
 
 class CLITest {
 
@@ -46,22 +45,25 @@ class CLITest {
     }
 
     @Test
-    void testParseCommand_GenerateMigrationCommand() {
-        // Set up
-        String userInput = "--generate-migration test_migration";
-        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
-        GenerateMigrationCommand mockCommand = mock(GenerateMigrationCommand.class);
+void testParseCommand_GenerateMigrationCommand() {
+    // Set up
+    String userInput = "generate test_migration";
+    System.setIn(new ByteArrayInputStream(userInput.getBytes()));
 
-        // Use doNothing() since it's a void method
-        doNothing().when(mockCommand).execute();
+    // Create a mock for GenerateMigrationCommand
+    GenerateMigrationCommand mockCommand = mock(GenerateMigrationCommand.class);
 
-        // Execute
-        CLI.main(new String[]{});
+    // Use Mockito to configure the mock
+    doNothing().when(mockCommand).execute();
 
-        // Verify
-        assertEquals("Welcome to Batavia ORM\nPlease provide a command: Generating migration: test_migration", outputStreamCaptor.toString().trim());
-        verify(mockCommand, times(1)).execute();
-    }
+    // Execute
+    CLI.main(new String[]{});
+
+    // Verify
+    assertEquals("Welcome to Batavia ORM\nPlease provide a command: Generating migration: test_migration", outputStreamCaptor.toString().trim());
+    verify(mockCommand, times(1)).execute();
+}
+
 
     @Test
     void testStartCLI_MigrateCommand() {
