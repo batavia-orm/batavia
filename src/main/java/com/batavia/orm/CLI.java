@@ -15,8 +15,11 @@ import com.batavia.orm.cli.RevertCommand;
 public class CLI {
     private final BufferedReader reader;
     // Constructor for dependency injection
-    public CLI(BufferedReader reader, List<Command> commands) {
+    private final GenerateMigrationCommand generateMigrationCommand;
+
+    public CLI(BufferedReader reader, GenerateMigrationCommand generateMigrationCommand) {
         this.reader = reader;
+        this.generateMigrationCommand = generateMigrationCommand;
     }
 
     public void startCLI() {
@@ -65,7 +68,7 @@ public class CLI {
                     System.out.println("Usage: --generate-migration <migration-filename>");
                     return null;
                 } else {
-                    return new GenerateMigrationCommand(args[1]);
+                    return generateMigrationCommand;
                 }
             case "migrate":
                 return new MigrateCommand();
@@ -94,9 +97,11 @@ public class CLI {
     }
 
     public static void main(String[] args) {
+        // Initialize your commands with their required dependencies
+        GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("your_migration_filename");
+    
         // Usage in main method with actual dependencies
-        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)),
-        Arrays.asList(new GenerateMigrationCommand(""), new MigrateCommand(), new RevertCommand(), new ShowMigrationsCommand()));
+        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand);
         cli.startCLI();
     }
 }
