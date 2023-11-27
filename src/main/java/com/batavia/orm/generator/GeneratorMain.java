@@ -12,7 +12,7 @@ public class GeneratorMain {
 
   private Table tableToBeApplied;
   private ArrayList<Column> columnsToBeApplied;
-  String upMigrationFilePath;
+  private String upMigrationFilePath;
   private String downMigrationFilePath;
 
   public GeneratorMain(
