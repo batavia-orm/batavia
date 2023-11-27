@@ -1,5 +1,6 @@
 package com.batavia.orm.cli;
 
+
 public class GenerateMigrationCommand implements Command {
     private String migrationFilename;
 
@@ -10,6 +11,5 @@ public class GenerateMigrationCommand implements Command {
     @Override
     public void execute() {
         System.out.println("Generating migration: " + migrationFilename);
-        // Implement the logic for generating a migration based on the provided filename.
     }
 }
