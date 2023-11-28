@@ -3,9 +3,6 @@ package com.batavia.orm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-
 import com.batavia.orm.cli.Command;
 import com.batavia.orm.cli.GenerateMigrationCommand;
 import com.batavia.orm.cli.MigrateCommand;
@@ -16,10 +13,16 @@ public class CLI {
     private final BufferedReader reader;
     // Constructor for dependency injection
     private final GenerateMigrationCommand generateMigrationCommand;
+    private final MigrateCommand migrateCommand;
+    private final RevertCommand revertCommand;
+    private final ShowMigrationsCommand showMigrationsCommand;
 
-    public CLI(BufferedReader reader, GenerateMigrationCommand generateMigrationCommand) {
+    public CLI(BufferedReader reader, GenerateMigrationCommand generateMigrationCommand, MigrateCommand migrateCommand, RevertCommand revertCommand, ShowMigrationsCommand showMigrationsCommand) {
         this.reader = reader;
         this.generateMigrationCommand = generateMigrationCommand;
+        this.migrateCommand = migrateCommand;
+        this.revertCommand = revertCommand;
+        this.showMigrationsCommand = showMigrationsCommand;
     }
 
     public void startCLI() {
@@ -71,11 +74,11 @@ public class CLI {
                     return generateMigrationCommand;
                 }
             case "migrate":
-                return new MigrateCommand();
+                return migrateCommand;
             case "revert":
-                return new RevertCommand();
+                return revertCommand;
             case "show":
-                return new ShowMigrationsCommand();
+                return showMigrationsCommand;
             case "help":
                 printUsage();
                 return null;
@@ -97,11 +100,12 @@ public class CLI {
     }
 
     public static void main(String[] args) {
-        // Initialize your commands with their required dependencies
         GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("your_migration_filename");
-    
-        // Usage in main method with actual dependencies
-        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand);
+        MigrateCommand migrateCommand = new MigrateCommand();
+        RevertCommand revertCommand = new RevertCommand();
+        ShowMigrationsCommand showMigrationsCommand = new ShowMigrationsCommand();
+
+        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand, migrateCommand, revertCommand, showMigrationsCommand);
         cli.startCLI();
     }
 }

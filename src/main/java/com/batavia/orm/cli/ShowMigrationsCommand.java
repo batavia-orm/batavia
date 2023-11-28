@@ -1,7 +1,5 @@
 package com.batavia.orm.cli;
 
-import com.batavia.orm.cli.Command;
-
 // Concrete command for showing migrations
 public class ShowMigrationsCommand implements Command {
     @Override
