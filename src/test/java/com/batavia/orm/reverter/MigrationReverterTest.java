@@ -36,12 +36,7 @@ class MigrationReverterTest {
 
     @Test
     void revert_withArgument_shouldRevertMigrationsInReverseOrderUntilDesiredLastAppliedMigration() throws SQLException, IOException {
-        String desiredLastAppliedMigration = "migration3.sql";
-        createMockMigrationFile("migration1.sql", "migration1-content");
-        createMockMigrationFile("migration1.down.sql", "migration1-down-content");
-        createMockMigrationFile("migration2.sql", "migration2-content");
-        createMockMigrationFile("migration2.down.sql", "migration2-down-content");
-        createMockMigrationFile(desiredLastAppliedMigration, "migration3-content");
+        createMultipleMockMigrationFiles();
 
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
@@ -49,44 +44,79 @@ class MigrationReverterTest {
 
         // getMigrationsToRevert flow
         when(resultSet.next()).thenReturn(true, true, true, false);
-        when(resultSet.getString("migration_file")).thenReturn("migration1.sql", "migration2.sql", "migration3.sql");
+        when(resultSet.getString("migration_file")).thenReturn("migration3.sql", "migration2.sql", "migration1.sql");
        
         // revertMigration
-        migrationReverter.revert(desiredLastAppliedMigration);
+        migrationReverter.revert("migration1.sql");
 
         // Assert
-        verify(statement).executeQuery("SELECT EXISTS (SELECT * FROM batavia_migrations WHERE migration_file = 'migration3.sql')");
+        verify(statement).executeQuery("SELECT EXISTS (SELECT * FROM batavia_migrations WHERE migration_file = 'migration1.sql')");
         verify(statement).executeQuery("SELECT migration_file FROM batavia_migrations ORDER BY id DESC");
-        verify(statement).execute("migration1-down-content");
-        verify(statement).executeUpdate("DELETE FROM batavia_migrations WHERE migration_file = 'migration1.sql'");
+        verify(statement).execute("migration3-down-content");
+        verify(statement).executeUpdate("DELETE FROM batavia_migrations WHERE migration_file = 'migration3.sql'");
         verify(statement).execute("migration2-down-content");
         verify(statement).executeUpdate("DELETE FROM batavia_migrations WHERE migration_file = 'migration2.sql'");
     }
 
     @Test
     void revert_withArgument_shouldNotRevertAnyMigrationsIfDesiredLastAppliedMigrationDoesNotExist() throws SQLException, IOException {
-        String desiredLastAppliedMigration = "migration3.sql";
-        createMockMigrationFile("migration1.sql", "migration1-content");
-        createMockMigrationFile("migration1.down.sql", "migration1-down-content");
-        createMockMigrationFile("migration2.sql", "migration2-content");
-        createMockMigrationFile("migration2.down.sql", "migration2-down-content");
-        createMockMigrationFile(desiredLastAppliedMigration, "migration3-content");
+        createMultipleMockMigrationFiles();
 
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getBoolean(1)).thenReturn(false);
 
         // revertMigration
-        migrationReverter.revert(desiredLastAppliedMigration);
+        migrationReverter.revert("migration1.sql");
 
         // Assert
-        verify(statement).executeQuery("SELECT EXISTS (SELECT * FROM batavia_migrations WHERE migration_file = 'migration3.sql')");
+        verify(statement).executeQuery("SELECT EXISTS (SELECT * FROM batavia_migrations WHERE migration_file = 'migration1.sql')");
         verify(statement, never()).executeQuery("SELECT migration_file FROM batavia_migrations ORDER BY id DESC");
         verify(statement, never()).executeUpdate(anyString());
         verify(statement, never()).execute(anyString());
     }
 
-    
+    @Test
+    void revert_withoutArgument_shouldRevertLastAppliedMigrationIfItExists() throws SQLException, IOException {
+        createMultipleMockMigrationFiles();
+
+        // getLastAppliedMigration flow
+        when(resultSet.next()).thenReturn(true, false);
+        when(resultSet.getString("migration_file")).thenReturn("migration3.sql");
+
+        // revertMigration
+        migrationReverter.revert();
+
+        // Assert
+        verify(statement).executeQuery("SELECT migration_file FROM batavia_migrations ORDER BY id DESC LIMIT 1");
+        verify(statement).execute("migration3-down-content");
+        verify(statement).executeUpdate("DELETE FROM batavia_migrations WHERE migration_file = 'migration3.sql'");
+    }
+
+    @Test
+    void revert_withoutArgument_shouldNotRevertAnyMigrationsIfNoMigrationIsApplied() throws SQLException, IOException {
+        createMultipleMockMigrationFiles();
+
+        // getLastAppliedMigration flow
+        when(resultSet.next()).thenReturn( false);
+
+        // revertMigration
+        migrationReverter.revert();
+
+        // Assert
+        verify(statement).executeQuery("SELECT migration_file FROM batavia_migrations ORDER BY id DESC LIMIT 1");
+        verify(statement, never()).execute(anyString());
+        verify(statement, never()).executeUpdate(anyString());
+    }
+
+    private void createMultipleMockMigrationFiles() throws IOException {
+        createMockMigrationFile("migration1.sql", "migration1-content");
+        createMockMigrationFile("migration1.down.sql", "migration1-down-content");
+        createMockMigrationFile("migration2.sql", "migration2-content");
+        createMockMigrationFile("migration2.down.sql", "migration2-down-content");
+        createMockMigrationFile( "migration3.sql", "migration3-content");
+        createMockMigrationFile("migration3.down.sql", "migration3-down-content");
+    }
 
     private File createMockMigrationFile(String fileName, String content) throws IOException {
         String fileContent = content;
