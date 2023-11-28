@@ -9,6 +9,7 @@ src/test/java/com/batavia/orm/generator/script-to-file-generator-tests/up-script
 src/test/java/com/batavia/orm/generator/script-to-file-generator-tests/down-script-test.sql
 
 # maven
+bin/
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -18,3 +19,4 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.settings/
