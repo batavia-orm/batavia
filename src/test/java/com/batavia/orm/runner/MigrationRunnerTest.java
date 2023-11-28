@@ -2,15 +2,12 @@ package com.batavia.orm.runner;
 
 import org.junit.jupiter.api.*;
 
-import static org.mockito.Matchers.anyString;
+// import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
-import java.util.Arrays;
 import io.github.cdimascio.dotenv.Dotenv;
 
 
@@ -36,8 +33,8 @@ public class MigrationRunnerTest {
 
     @Test
     void migrate_WhenMigrationsTableDoesNotExist_ShouldCreateTableAndExecuteMigrations() throws SQLException, IOException {
-        File migrationFile1 = createMockMigrationFile("migration1.sql", "migration1-content");
-        File migrationFile2 = createMockMigrationFile("migration2.sql", "migration2-content");
+        createMockMigrationFile("migration1.sql", "migration1-content");
+        createMockMigrationFile("migration2.sql", "migration2-content");
         when(resultSet.getBoolean(1)).thenReturn(false);
 
         migrationRunner.migrate();
@@ -52,8 +49,8 @@ public class MigrationRunnerTest {
 
     @Test
     void migrate_WhenMigrationsTableExists_ShouldOnlyExecuteUnappliedMigrations() throws SQLException, IOException {
-        File appliedMigrationFile = createMockMigrationFile("applied_migration.sql", "applied_migration-content");
-        File unappliedMigrationFile = createMockMigrationFile("unapplied_migration.sql", "unapplied_migration-content");
+        createMockMigrationFile("applied_migration.sql", "applied_migration-content");
+        createMockMigrationFile("unapplied_migration.sql", "unapplied_migration-content");
         when(resultSet.getBoolean(1)).thenReturn(true);
 
         when(resultSet.getInt(1)).thenReturn(1).thenReturn(0);
