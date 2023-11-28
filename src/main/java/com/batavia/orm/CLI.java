@@ -18,7 +18,6 @@ public class CLI {
         // Initialize necessary components
         ComparatorMain comparator = new ComparatorMain();
 
-
         switch (command) {
             case "generate-migration":
                 if (args.length < 2) {

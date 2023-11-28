@@ -15,7 +15,7 @@ public class Table {
     return tableName;
   }
 
-  public HashMap<String, Column> getColumn() {
+  public HashMap<String, Column> getColumns() {
     return this.columns;
   }
 
