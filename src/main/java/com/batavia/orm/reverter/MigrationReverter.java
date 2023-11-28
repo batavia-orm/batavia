@@ -44,7 +44,7 @@ public class MigrationReverter {
         }
     }
 
-    public String getLastAppliedMigration(Statement statement) throws SQLException {
+    private String getLastAppliedMigration(Statement statement) throws SQLException {
         String query = "SELECT migration_file FROM batavia_migrations ORDER BY id DESC LIMIT 1";
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
@@ -56,7 +56,7 @@ public class MigrationReverter {
     }
     
 
-    public List<String> getMigrationsToRevert(String desiredLastAppliedMigration, Statement statement) throws SQLException {
+    private List<String> getMigrationsToRevert(String desiredLastAppliedMigration, Statement statement) throws SQLException {
         String query = "SELECT migration_file FROM batavia_migrations ORDER BY id DESC";
         List<String> migrationFilesToRevert = new ArrayList<>();
         if (migrationFileExists(desiredLastAppliedMigration, statement)) {
@@ -75,7 +75,7 @@ public class MigrationReverter {
         return migrationFilesToRevert;
     }
 
-    public boolean migrationFileExists(String migrationFileName, Statement statement) throws SQLException {
+    private boolean migrationFileExists(String migrationFileName, Statement statement) throws SQLException {
         String query = String.format("SELECT EXISTS (SELECT * FROM batavia_migrations WHERE migration_file = '%s')", migrationFileName);
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
