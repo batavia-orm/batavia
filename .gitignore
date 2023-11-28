@@ -4,6 +4,9 @@
 #env
 .env
 
+.classpath
+.project
+.settings/
 # maven
 target/
 pom.xml.tag
