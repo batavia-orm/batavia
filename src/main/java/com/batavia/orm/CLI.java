@@ -53,7 +53,8 @@ public class CLI {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Error reading input: " + e.getMessage());
+                continueCLI = false;  // Set the flag to exit the loop
             }
         }
     }

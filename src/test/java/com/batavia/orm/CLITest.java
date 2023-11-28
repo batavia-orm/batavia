@@ -1,5 +1,6 @@
 package com.batavia.orm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import com.batavia.orm.cli.GenerateMigrationCommand;
 import com.batavia.orm.cli.MigrateCommand;
@@ -8,10 +9,12 @@ import com.batavia.orm.cli.ShowMigrationsCommand;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.mockito.Mockito;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
@@ -80,7 +83,7 @@ class CLITest {
         // Use Mockito to configure the mock
         doNothing().when(mockCommand).execute();
 
-        // Create a mock BufferedReader that returns "generate test_migration" when readLine() is called
+        // Create a mock BufferedReader that returns "migrate" when readLine() is called
         BufferedReader mockReader = Mockito.mock(BufferedReader.class);
         Mockito.when(mockReader.readLine()).thenReturn("migrate", "exit");
 
@@ -107,7 +110,7 @@ class CLITest {
         // Use Mockito to configure the mock
         doNothing().when(mockCommand).execute();
 
-        // Create a mock BufferedReader that returns "generate test_migration" when readLine() is called
+        // Create a mock BufferedReader that returns "show" when readLine() is called
         BufferedReader mockReader = Mockito.mock(BufferedReader.class);
         Mockito.when(mockReader.readLine()).thenReturn("show", "exit");
 
@@ -183,6 +186,34 @@ class CLITest {
         String actualOutput = outputStreamCaptor.toString().trim().replace("\r\n", "\n");
         assertEquals(expectedOutput, actualOutput);
     }
+
+    @Test
+    void testStartCLI_ExecuteCommandFails() throws Exception {
+        // Create a mock instance of GenerateMigrationCommand
+        GenerateMigrationCommand mockCommand = Mockito.mock(GenerateMigrationCommand.class);
+
+        // Use Mockito to configure the mock to throw an exception when execute() is called
+        doThrow(new RuntimeException("Execution failed")).when(mockCommand).execute();
+
+        // Create a mock BufferedReader that returns "generate test_migration" when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("generate test_migration", "exit");
+
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock command
+        CLI cli = new CLI(mockReader, mockCommand, null, null, null);
+
+        // Execute
+        assertThrows(RuntimeException.class, cli::startCLI);
+
+        // Verify
+        verify(mockCommand).execute();
+    }
+
+    
 
     /**TODO: test generate command when <migration-filename> is missing
      * statement coverage: command classes have additional methods
