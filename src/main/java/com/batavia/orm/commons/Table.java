@@ -27,8 +27,4 @@ public class Table {
     return this.columns.size();
   }
 
-  public HashMap<String, Column> getColumns() {
-    return this.columns;
-  }
-
 }
