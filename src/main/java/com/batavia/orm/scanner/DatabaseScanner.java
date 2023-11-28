@@ -1,4 +1,4 @@
-package com.batavia.orm.scanner.dbScanner;
+package com.batavia.orm.scanner;
 
 import java.sql.*;
 import java.util.HashMap;
