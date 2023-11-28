@@ -9,9 +9,12 @@ import com.batavia.orm.annotations.Entity;
 import com.batavia.orm.annotations.EntityColumn;
 import com.batavia.orm.annotations.PrimaryColumn;
 import com.batavia.orm.annotations.Unique;
+
 import com.batavia.orm.commons.Table;
 import com.batavia.orm.commons.Column;
+
 import com.github.javaparser.StaticJavaParser;
+
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
@@ -26,7 +29,7 @@ public class DataSourceScanner {
   public HashMap<String, Table> findAllEntities() throws IOException {
     HashMap<String, Table> tables = new HashMap<String, Table>();
     ArrayList<ClassOrInterfaceDeclaration> entities = this.findAllEntityClass();
-    
+
     for (ClassOrInterfaceDeclaration entity : entities) {
       Table table = this.convertEntityToTable(entity);
       tables.put(table.getTableName(), table);
