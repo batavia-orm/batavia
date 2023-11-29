@@ -9,7 +9,6 @@ import com.batavia.orm.cli.ShowMigrationsCommand;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.mockito.Mockito;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -74,6 +73,37 @@ class CLITest {
         assertEquals("Please provide a command: Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
         verify(mockCommand, times(1)).execute();
     }
+
+    @Test
+    void testParseCommand_GenerateCommandNoFilename() throws Exception {
+        // Create a mock instance of GenerateMigrationCommand
+        GenerateMigrationCommand mockCommand = Mockito.mock(GenerateMigrationCommand.class);
+
+        // Use Mockito to configure the mock
+        doNothing().when(mockCommand).execute();
+
+        // Create a mock BufferedReader that returns "generate" when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("generate", "exit");
+
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock command
+        CLI cli = new CLI(mockReader, mockCommand, null, null, null);
+
+        // Execute
+        cli.startCLI();
+
+        // Verify
+        String expectedOutput = "Please provide a command: Usage: --generate-migration <migration-filename>" + System.lineSeparator() +
+                "Unknown command. Type 'help' for available commands." + System.lineSeparator() +
+                "Please provide a command: Exiting...";
+        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+    }
+
+
 
     @Test
     void testStartCLI_MigrateCommand() throws Exception{
@@ -156,6 +186,54 @@ class CLITest {
         verify(mockCommand, times(1)).execute();
     }
 
+//    @Test
+//    void testRevertCommand_execute() {
+//        // Create an instance of RevertCommand
+//        RevertCommand revertCommand = new RevertCommand();
+//
+//        // Capture System.out for verification
+//        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+//        System.setOut(new PrintStream(outputStreamCaptor));
+//
+//        // Execute
+//        revertCommand.execute();
+//
+//        // Verify
+//        String expectedOutput = "Migrating...";
+//        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+//    }
+
+    @Test
+    void testParseCommand_HelpCommand() throws Exception {
+        // Create a mock BufferedReader that returns "help" when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("help", "exit");
+
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock reader
+        CLI cli = new CLI(mockReader, null, null, null, null);
+
+        // Execute
+        cli.startCLI();
+
+        // Verify
+        String expectedOutput = "Please provide a command: Available commands: \n" +
+                "  generate <migration-filename>: Generate a migration\n" +
+                "  migrate: Migrate\n" +
+                "  revert: Revert\n" +
+                "  show: Show migrations\n" +
+                "  help: Display available commands\n" +
+                "  exit/quit: Exit the CLI\n" +
+                "Unknown command. Type 'help' for available commands.\n" +
+                "Please provide a command: Exiting...";
+        expectedOutput = expectedOutput.trim().replace("\r\n", "\n");
+        String actualOutput = outputStreamCaptor.toString().trim().replace("\r\n", "\n");
+        assertEquals(expectedOutput, actualOutput);
+    }
+
     @Test
     void testParseCommand_UnknownCommand() throws Exception{
         BufferedReader mockReader = Mockito.mock(BufferedReader.class);
@@ -213,10 +291,63 @@ class CLITest {
         verify(mockCommand).execute();
     }
 
-    
+    @Test
+    void testStartCLI_IOException() throws Exception {
+        // Create a mock BufferedReader that throws an IOException when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenThrow(new IOException("Test exception"));
 
-    /**TODO: test generate command when <migration-filename> is missing
-     * statement coverage: command classes have additional methods
-     * error handling for execute() and readLine() fails
-     **/
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock reader
+        CLI cli = new CLI(mockReader, null, null, null, null);
+
+        // Execute
+        cli.startCLI();
+
+        // Verify
+        assertEquals("Please provide a command: Error reading input: Test exception", outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    void testParseCommand_NoCommandProvided() throws Exception {
+        // Create a mock BufferedReader that returns an empty string when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("");
+
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock reader
+        CLI cli = new CLI(mockReader, null, null, null, null);
+
+        // Execute
+        cli.startCLI();
+
+        // Verify
+        assertEquals("Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
+    }
+    @Test
+    void testParseCommand_NoCommandProvided_MultipleSpaces() throws Exception {
+        // Create a mock BufferedReader that returns "   " (three spaces) when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("   ", "exit");
+
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        // Create an instance of CLI with the mock reader
+        CLI cli = new CLI(mockReader, null, null, null, null);
+
+        // Execute
+        cli.startCLI();
+
+        // Verify
+        assertEquals("Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
+    }
+
 }

@@ -11,7 +11,6 @@ import com.batavia.orm.cli.RevertCommand;
 
 public class CLI {
     private final BufferedReader reader;
-    // Constructor for dependency injection
     private final GenerateMigrationCommand generateMigrationCommand;
     private final MigrateCommand migrateCommand;
     private final RevertCommand revertCommand;
@@ -26,23 +25,18 @@ public class CLI {
     }
 
     public void startCLI() {
-        while (true) {
+        boolean continueRunning = true;
+        while (continueRunning) {
             try {
                 System.out.print("Please provide a command: ");
                 String userInput = reader.readLine();
 
-                if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit")) {
+                if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit") || userInput.trim().isEmpty()) {
                     System.out.println("Exiting...");
                     break;
                 }
 
                 String[] args = userInput.split("\\s+");
-
-                // Check for exit command again
-                if (args.length == 1 && (args[0].equalsIgnoreCase("exit") || args[0].equalsIgnoreCase("quit"))) {
-                    System.out.println("Exiting...");
-                    break;
-                }
 
                 Command command = parseCommand(args);
 
@@ -54,7 +48,7 @@ public class CLI {
 
             } catch (IOException e) {
                 System.out.println("Error reading input: " + e.getMessage());
-                continueCLI = false;  // Set the flag to exit the loop
+                continueRunning = false;
             }
         }
     }
