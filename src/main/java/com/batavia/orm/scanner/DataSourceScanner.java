@@ -24,21 +24,6 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 public class DataSourceScanner {
   private String dataSourcePath;
 
-  public static void main(String[] args) {
-    DataSourceScanner scanner = new DataSourceScanner("/Users/enryleinhard/Projects/eclipse/exampleProject/src");
-    try {
-      HashMap<String, Table> tables = scanner.findAllEntities();
-      tables.forEach((tn, t) -> {
-        System.out.println(tn);
-        t.getColumns().forEach((cn, c) -> {
-          System.out.println(c);
-        });
-      });
-    } catch (IOException e) {
-      System.out.println("ERR:IO-EXCEPTION");
-    }
-  }
-
   public DataSourceScanner(String dataSourcePath) {
     this.dataSourcePath = dataSourcePath;
   }
