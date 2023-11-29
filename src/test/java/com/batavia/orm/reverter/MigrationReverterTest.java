@@ -2,8 +2,7 @@ package com.batavia.orm.reverter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import io.github.cdimascio.dotenv.Dotenv;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,23 +20,23 @@ class MigrationReverterTest {
     private Connection connection;
     private Statement statement;
     private ResultSet resultSet;
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
+
+    @TempDir
+    File tempDir;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() throws SQLException, IOException {
         connection = mock(Connection.class);
         statement = mock(Statement.class);
         resultSet = mock(ResultSet.class);
         when(connection.createStatement()).thenReturn(statement);
         when(statement.executeQuery(anyString())).thenReturn(resultSet);
-        migrationReverter = new MigrationReverter(MIGRATIONS_DIR, connection);
+        migrationReverter = new MigrationReverter(tempDir.toString(), connection);
+        createMultipleMockMigrationFiles();
     }
 
     @Test
-    void revert_withArgument_shouldRevertMigrationsInReverseOrderUntilDesiredLastAppliedMigration() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
-
+    void revert_withArgument_shouldRevertMigrationsInReverseOrderUntilDesiredLastAppliedMigration() throws SQLException {
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getBoolean(1)).thenReturn(true);
@@ -59,9 +58,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withArgument_shouldNotRevertAnyMigrationsIfDesiredLastAppliedMigrationDoesNotExist() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
-
+    void revert_withArgument_shouldNotRevertAnyMigrationsIfDesiredLastAppliedMigrationDoesNotExist() throws SQLException {
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getBoolean(1)).thenReturn(false);
@@ -77,9 +74,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withoutArgument_shouldRevertLastAppliedMigrationIfItExists() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
-
+    void revert_withoutArgument_shouldRevertLastAppliedMigrationIfItExists() throws SQLException {
         // getLastAppliedMigration flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getString("migration_file")).thenReturn("migration3.sql");
@@ -94,9 +89,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withoutArgument_shouldNotRevertAnyMigrationsIfNoMigrationIsApplied() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
-
+    void revert_withoutArgument_shouldNotRevertAnyMigrationsIfNoMigrationIsApplied() throws SQLException {
         // getLastAppliedMigration flow
         when(resultSet.next()).thenReturn( false);
 
@@ -120,9 +113,7 @@ class MigrationReverterTest {
 
     private File createMockMigrationFile(String fileName, String content) throws IOException {
         String fileContent = content;
-        String filePath = MIGRATIONS_DIR + '/' + fileName;
-
-        File migrationFile = new File(filePath);
+        File migrationFile = new File(tempDir, fileName);
         migrationFile.createNewFile();
 
         FileWriter fileWriter = new FileWriter(migrationFile);
