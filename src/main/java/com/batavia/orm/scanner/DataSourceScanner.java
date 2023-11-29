@@ -62,7 +62,8 @@ public class DataSourceScanner {
         FieldDeclaration entityField = entityMember.asFieldDeclaration();
         VariableDeclarator fieldVar = entityField.getVariable(0);
 
-        Column tableColumn = new Column(Utils.camelCaseToSnakeCase(fieldVar.getNameAsString()), fieldVar.getTypeAsString());
+        Column tableColumn = new Column(Utils.camelCaseToSnakeCase(fieldVar.getNameAsString()),
+            fieldVar.getTypeAsString());
         if (entityMember.isAnnotationPresent(PrimaryColumn.class)) {
           tableColumn.setIsPrimaryColumn(true);
           tableColumn.setIsUnique(true);
@@ -96,7 +97,8 @@ public class DataSourceScanner {
     return Files.isRegularFile(path) && path.toString().endsWith(".java");
   }
 
-  private void filterEntityClasses(Path path, ArrayList<ClassOrInterfaceDeclaration> filteredEntities) throws FileNotFoundException{
+  private void filterEntityClasses(Path path, ArrayList<ClassOrInterfaceDeclaration> filteredEntities)
+      throws FileNotFoundException {
     CompilationUnit cUnit = StaticJavaParser.parse(path.toFile());
     cUnit.findAll(ClassOrInterfaceDeclaration.class).forEach(clazz -> {
       if (clazz.isAnnotationPresent(Entity.class))
