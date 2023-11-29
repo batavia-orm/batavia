@@ -1,27 +1,68 @@
 package com.batavia.orm.utils;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Utils {
 
-    public static void writeToMigrationFile(String fileName, String migrationScript) {
-        String MIGRATION_DIR="migrations"; // will change to dotenv
-        String timestamp = Long.toString(System.currentTimeMillis());
+  private Utils() {
+    throw new AssertionError(
+        "Cannot instantiate the Utils class. Use its static methods.");
+  }
 
-        // optional file name set default
-        if (fileName.length() == 0) {
-            fileName="migration-filename";
-        }
-
-        // Format: timestamp-filename.sql (e.g. 167493743947-create-table-employees.sql)
-        String filePath = String.format("%s/%s-%s.sql",MIGRATION_DIR, timestamp, fileName);
-
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write(migrationScript);
-            System.out.println("File created: " + filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  public static String camelCaseToSnakeCase(String camelCaseString) {
+    StringBuilder snakeCaseString = new StringBuilder();
+    for (int i = 0; i < camelCaseString.length(); i++) {
+      char c = camelCaseString.charAt(i);
+      if (i != 0 && Character.isUpperCase(c)) {
+        snakeCaseString.append("_");
+        snakeCaseString.append(Character.toLowerCase(c));
+      } else {
+        snakeCaseString.append(Character.toLowerCase(c));
+      }
     }
+    return snakeCaseString.toString();
+  }
+
+  public static String pascalCaseToSnakeCase(String camelCaseString) {
+    StringBuilder snakeCaseString = new StringBuilder();
+    for (int i = 0; i < camelCaseString.length(); i++) {
+      char c = camelCaseString.charAt(i);
+      if (i != 0 && Character.isUpperCase(c)) {
+        snakeCaseString.append("_");
+        snakeCaseString.append(Character.toLowerCase(c));
+      } else {
+        snakeCaseString.append(Character.toLowerCase(c));
+      }
+    }
+    return snakeCaseString.toString();
+  }
+
+  public static void writeToUpMigrationFile(
+      String filePath,
+      String migrationScript) throws IOException {
+    try (
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+      writer.write(migrationScript);
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      throw new IOException("File path not found!");
+    }
+  }
+
+  public static void writeToDownMigrationFile(
+      String filePath,
+      String migrationScript) throws IOException {
+    try {
+      String currentFileContent = new String(
+          Files.readAllBytes(Paths.get(filePath)));
+      String newContent = currentFileContent + migrationScript;
+      Files.write(Paths.get(filePath), newContent.getBytes());
+    } catch (IOException e) {
+      throw new IOException("File path not found!");
+    }
+  }
 }
