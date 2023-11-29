@@ -1,6 +1,5 @@
 package com.batavia.orm;
 import com.batavia.orm.comparator.ComparatorMain;
-import com.batavia.orm.scanner.ScannerMain;
 
 public class CLI {
     public static void proccessCommands(String[] args){
@@ -18,8 +17,6 @@ public class CLI {
 
         // Initialize necessary components
         ComparatorMain comparator = new ComparatorMain();
-        ScannerMain scanner = new ScannerMain();
-
 
         switch (command) {
             case "generate-migration":
