@@ -36,7 +36,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withArgument_shouldRevertMigrationsInReverseOrderUntilDesiredLastAppliedMigration() throws SQLException, IOException {
+    void revert_withArgument_shouldRevertMigrationsInReverseOrderUntilDesiredLastAppliedMigration() throws SQLException {
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getBoolean(1)).thenReturn(true);
@@ -58,7 +58,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withArgument_shouldNotRevertAnyMigrationsIfDesiredLastAppliedMigrationDoesNotExist() throws SQLException, IOException {
+    void revert_withArgument_shouldNotRevertAnyMigrationsIfDesiredLastAppliedMigrationDoesNotExist() throws SQLException {
         // migrationFileExists(desiredLastAppliedMigration) flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getBoolean(1)).thenReturn(false);
@@ -74,7 +74,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withoutArgument_shouldRevertLastAppliedMigrationIfItExists() throws SQLException, IOException {
+    void revert_withoutArgument_shouldRevertLastAppliedMigrationIfItExists() throws SQLException {
         // getLastAppliedMigration flow
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getString("migration_file")).thenReturn("migration3.sql");
@@ -89,7 +89,7 @@ class MigrationReverterTest {
     }
 
     @Test
-    void revert_withoutArgument_shouldNotRevertAnyMigrationsIfNoMigrationIsApplied() throws SQLException, IOException {
+    void revert_withoutArgument_shouldNotRevertAnyMigrationsIfNoMigrationIsApplied() throws SQLException {
         // getLastAppliedMigration flow
         when(resultSet.next()).thenReturn( false);
 

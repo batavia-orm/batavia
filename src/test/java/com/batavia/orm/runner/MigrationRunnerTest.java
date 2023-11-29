@@ -33,7 +33,7 @@ public class MigrationRunnerTest {
     }
 
     @Test
-    void migrate_WhenMigrationsTableDoesNotExist_ShouldCreateTableAndExecuteMigrations() throws SQLException, IOException {
+    void migrate_WhenMigrationsTableDoesNotExist_ShouldCreateTableAndExecuteMigrations() throws SQLException {
         when(resultSet.getBoolean(1)).thenReturn(false);
 
         migrationRunner.migrate();
@@ -51,7 +51,7 @@ public class MigrationRunnerTest {
     }
 
     @Test
-    void migrate_WhenMigrationsTableExists_ShouldOnlyExecuteUnappliedMigrations() throws SQLException, IOException {
+    void migrate_WhenMigrationsTableExists_ShouldOnlyExecuteUnappliedMigrations() throws SQLException {
         when(resultSet.getBoolean(1)).thenReturn(true);
 
         when(resultSet.getInt(1)).thenReturn(0).thenReturn(1);
