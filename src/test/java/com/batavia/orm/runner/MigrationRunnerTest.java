@@ -1,15 +1,14 @@
 package com.batavia.orm.runner;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.mockito.ArgumentMatchers.anyString;
-// import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
-import io.github.cdimascio.dotenv.Dotenv;
 
 
 public class MigrationRunnerTest {
@@ -17,24 +16,24 @@ public class MigrationRunnerTest {
     private Connection connection;
     private Statement statement;
     private ResultSet resultSet;
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
 
+    @TempDir
+    File tempDir;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() throws SQLException, IOException {
         connection = mock(Connection.class);
         statement = mock(Statement.class);
         resultSet = mock(ResultSet.class);
         when(connection.createStatement()).thenReturn(statement);
         when(statement.executeQuery(anyString())).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true).thenReturn(false);
-        migrationRunner = new MigrationRunner(MIGRATIONS_DIR, connection);
+        migrationRunner = new MigrationRunner(tempDir.toString(), connection);
+        createMultipleMockMigrationFiles();
     }
 
     @Test
     void migrate_WhenMigrationsTableDoesNotExist_ShouldCreateTableAndExecuteMigrations() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
         when(resultSet.getBoolean(1)).thenReturn(false);
 
         migrationRunner.migrate();
@@ -53,7 +52,6 @@ public class MigrationRunnerTest {
 
     @Test
     void migrate_WhenMigrationsTableExists_ShouldOnlyExecuteUnappliedMigrations() throws SQLException, IOException {
-        createMultipleMockMigrationFiles();
         when(resultSet.getBoolean(1)).thenReturn(true);
 
         when(resultSet.getInt(1)).thenReturn(0).thenReturn(1);
@@ -81,9 +79,7 @@ public class MigrationRunnerTest {
 
     private File createMockMigrationFile(String fileName, String content) throws IOException {
         String fileContent = content;
-        String filePath = MIGRATIONS_DIR + '/' + fileName;
-
-        File migrationFile = new File(filePath);
+        File migrationFile = new File(tempDir, fileName);
         migrationFile.createNewFile();
 
         FileWriter fileWriter = new FileWriter(migrationFile);
