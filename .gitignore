@@ -4,9 +4,14 @@
 #env
 .env
 
+#testing file
+src/test/java/com/batavia/orm/generator/mock-migration-directory/down-script-test.sql
+src/test/java/com/batavia/orm/generator/mock-migration-directory/up-script-test.sql
+
 .classpath
 .project
 .settings/
+
 # maven
 bin/
 target/
