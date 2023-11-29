@@ -32,8 +32,8 @@ public class DataSourceScannerTest {
 
     assertEquals(1, tables.size());
 
-    Table entityA = tables.get("EntityClassA");
-    assertEquals("EntityClassA", entityA.getTableName());
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
   }
   
   @Test
@@ -54,8 +54,8 @@ public class DataSourceScannerTest {
 
     assertEquals(1, tables.size());
 
-    Table entityA = tables.get("EntityClassA");
-    assertEquals("EntityClassA", entityA.getTableName());
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
 
     assertEquals(0, entityA.getColumns().size());
   }
@@ -79,13 +79,13 @@ public class DataSourceScannerTest {
 
     assertEquals(1, tables.size());
 
-    Table entityA = tables.get("EntityClassA");
-    assertEquals("EntityClassA", entityA.getTableName());
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
 
-    Column fieldA = entityA.getColumns().get("fieldA");
+    Column fieldA = entityA.getColumns().get("field_a");
     assertEquals(1, entityA.getColumns().size());
-    assertEquals("fieldA", fieldA.getColumnName());
-    assertEquals("VARCHAR(255)", fieldA.getColumnType());
+    assertEquals("field_a", fieldA.getColumnName());
+    assertEquals("VARCHAR", fieldA.getColumnType());
     assertEquals(false, fieldA.isPrimary());
     assertEquals(false, fieldA.isUnique());
   }
@@ -110,12 +110,12 @@ public class DataSourceScannerTest {
 
     assertEquals(1, tables.size());
 
-    Table entityA = tables.get("EntityClassA");
-    assertEquals("EntityClassA", entityA.getTableName());
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
 
-    Column fieldA = entityA.getColumns().get("fieldA");
+    Column fieldA = entityA.getColumns().get("field_a");
     assertEquals(1, entityA.getColumns().size());
-    assertEquals("fieldA", fieldA.getColumnName());
+    assertEquals("field_a", fieldA.getColumnName());
     assertEquals("INT", fieldA.getColumnType());
     assertEquals(true, fieldA.isPrimary());
     assertEquals(true, fieldA.isUnique());
@@ -141,12 +141,12 @@ public class DataSourceScannerTest {
 
     assertEquals(1, tables.size());
 
-    Table entityA = tables.get("EntityClassA");
-    assertEquals("EntityClassA", entityA.getTableName());
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
 
-    Column fieldA = entityA.getColumns().get("fieldA");
+    Column fieldA = entityA.getColumns().get("field_a");
     assertEquals(1, entityA.getColumns().size());
-    assertEquals("fieldA", fieldA.getColumnName());
+    assertEquals("field_a", fieldA.getColumnName());
     assertEquals("INT", fieldA.getColumnType());
     assertEquals(false, fieldA.isPrimary());
     assertEquals(true, fieldA.isUnique());

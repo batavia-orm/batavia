@@ -5,6 +5,34 @@ import java.io.IOException;
 
 public class Utils {
 
+    public static String camelCaseToSnakeCase(String camelCaseString) {
+        StringBuilder snakeCaseString = new StringBuilder();
+        for (int i = 0; i < camelCaseString.length(); i++) {
+            char c = camelCaseString.charAt(i);
+            if (i != 0 && Character.isUpperCase(c)) {
+                snakeCaseString.append("_");
+                snakeCaseString.append(Character.toLowerCase(c));
+            } else {
+                snakeCaseString.append(Character.toLowerCase(c));
+            }
+        }
+        return snakeCaseString.toString();
+    }
+
+    public static String pascalCaseToSnakeCase(String camelCaseString) {
+        StringBuilder snakeCaseString = new StringBuilder();
+        for (int i = 0; i < camelCaseString.length(); i++) {
+            char c = camelCaseString.charAt(i);
+            if (i != 0 && Character.isUpperCase(c)) {
+                snakeCaseString.append("_");
+                snakeCaseString.append(Character.toLowerCase(c));
+            } else {
+                snakeCaseString.append(Character.toLowerCase(c));
+            }
+        }
+        return snakeCaseString.toString();
+    }
+
     public static void writeToMigrationFile(String fileName, String migrationScript) {
         String MIGRATION_DIR="migrations"; // will change to dotenv
         String timestamp = Long.toString(System.currentTimeMillis());

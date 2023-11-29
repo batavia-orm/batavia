@@ -11,16 +11,33 @@ import com.batavia.orm.annotations.PrimaryColumn;
 import com.batavia.orm.annotations.Unique;
 
 import com.batavia.orm.commons.Table;
+import com.batavia.orm.utils.Utils;
 import com.batavia.orm.commons.Column;
 
 import com.github.javaparser.StaticJavaParser;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 
 public class DataSourceScanner {
   private String dataSourcePath;
+
+  public static void main(String[] args) {
+    DataSourceScanner scanner = new DataSourceScanner("/Users/enryleinhard/Projects/eclipse/exampleProject/src");
+    try {
+      HashMap<String, Table> tables = scanner.findAllEntities();
+      tables.forEach((tn, t) -> {
+        System.out.println(tn);
+        t.getColumns().forEach((cn, c) -> {
+          System.out.println(c);
+        });
+      });
+    } catch (IOException e) {
+      System.out.println("ERR:IO-EXCEPTION");
+    }
+  }
 
   public DataSourceScanner(String dataSourcePath) {
     this.dataSourcePath = dataSourcePath;
@@ -38,14 +55,14 @@ public class DataSourceScanner {
   }
 
   private Table convertEntityToTable(ClassOrInterfaceDeclaration entity) {
-    String entityName = entity.getNameAsString().toLowerCase();
+    String entityName = Utils.camelCaseToSnakeCase(entity.getNameAsString());
     Table table = new Table(entityName);
-
     entity.getMembers().forEach(entityMember -> {
       if (entityMember.isAnnotationPresent(EntityColumn.class)) {
-        VariableDeclarator entityField = entityMember.asFieldDeclaration().getVariable(0); 
-        Column tableColumn = new Column(entityField.getNameAsString(), entityField.getTypeAsString());
+        FieldDeclaration entityField = entityMember.asFieldDeclaration();
+        VariableDeclarator fieldVar = entityField.getVariable(0);
 
+        Column tableColumn = new Column(Utils.camelCaseToSnakeCase(fieldVar.getNameAsString()), fieldVar.getTypeAsString());
         if (entityMember.isAnnotationPresent(PrimaryColumn.class)) {
           tableColumn.setIsPrimaryColumn(true);
           tableColumn.setIsUnique(true);
