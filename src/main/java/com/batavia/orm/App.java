@@ -10,7 +10,7 @@ import java.sql.Statement;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class App {
-    private static final Dotenv dotenv = Dotenv.configure().directory("batavia\\.env").load();
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
 
     public static void main(String[] args) {

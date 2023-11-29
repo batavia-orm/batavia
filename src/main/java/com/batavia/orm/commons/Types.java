@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Types {
   private HashMap<String, String> javaToSqlTypeMap = new HashMap<String, String>() {{
-    put("String", "VARCHAR");
+    put("String", "VARCHAR(255)");
     put("Integer", "INT");
     put("int", "INT");
     put("Long", "BIGINT");
