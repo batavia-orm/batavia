@@ -38,7 +38,7 @@ public class DataSourceScanner {
   }
 
   private Table convertEntityToTable(ClassOrInterfaceDeclaration entity) {
-    String entityName = entity.getNameAsString();
+    String entityName = entity.getNameAsString().toLowerCase();
     Table table = new Table(entityName);
 
     entity.getMembers().forEach(entityMember -> {
