@@ -3,34 +3,36 @@ package com.batavia.orm.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
 
 public class UtilsTest {
 
-  private static final Dotenv dotenv = Dotenv.load();
+   @TempDir
+  private static Path tempMockMigrationDir;
 
-  private static final String upMigrationFilePath = dotenv.get(
-    "UP_MIGRATION_PATH"
-  );
-
-  private static final String downMigrationFilePath = dotenv.get(
-    "DOWN_MIGRATION_PATH"
-  );
 
   @BeforeEach
   public void clearFile() {
+    Path upMigrationFilePath = tempMockMigrationDir.resolve(
+      "up-script-test.sql"
+    );
+
+    Path downMigrationFilePath = tempMockMigrationDir.resolve(
+      "down-script-test.sql"
+    );
+
     try {
-      Files.write(Paths.get(upMigrationFilePath), new byte[0]);
-      Files.write(Paths.get(downMigrationFilePath), new byte[0]);
-    } catch (Exception e) {
+      Files.write(upMigrationFilePath, new byte[0]);
+      Files.write(downMigrationFilePath, new byte[0]);
+    } catch (IOException e) {
       System.out.println(e.getMessage());
     }
   }
@@ -52,10 +54,16 @@ public class UtilsTest {
   public void testWriteToUpMigrationFile_1() throws Exception {
     String mockedScript = "DROP TABLE users;" + "\n";
 
-    Utils.writeToUpMigrationFile(upMigrationFilePath, mockedScript);
+    Path upMigrationFilePath = tempMockMigrationDir.resolve(
+      "up-script-test.sql"
+    );
+
+    String upPath = upMigrationFilePath.toString();
+
+    Utils.writeToUpMigrationFile(upPath, mockedScript);
 
     String upFileContent = new String(
-      Files.readAllBytes(Paths.get(upMigrationFilePath))
+      Files.readAllBytes(Paths.get(upPath))
     );
 
     assertEquals(mockedScript, upFileContent);
@@ -79,13 +87,19 @@ public class UtilsTest {
   public void testWriteToDownMigrationFile_3() throws Exception {
     String mockedScript = "DROP TABLE users;" + "\n";
 
-    Utils.writeToDownMigrationFile(upMigrationFilePath, mockedScript);
-
-    String upFileContent = new String(
-      Files.readAllBytes(Paths.get(upMigrationFilePath))
+     Path downMigrationFilePath = tempMockMigrationDir.resolve(
+      "down-script-test.sql"
     );
 
-    assertEquals(mockedScript, upFileContent);
+    String downPath = downMigrationFilePath.toString();
+
+    Utils.writeToDownMigrationFile(downPath, mockedScript);
+
+    String downFileContent = new String(
+      Files.readAllBytes(Paths.get(downPath))
+    );
+
+    assertEquals(mockedScript, downFileContent);
   }
 
   @Test

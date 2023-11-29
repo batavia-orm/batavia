@@ -28,12 +28,12 @@ public class SqlScriptGeneratorTest {
   public void testCreateTableSqlScriptGenerator_2() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
-    table.addColumn(new Column("name", "VARCHAR(200)", false, false));
+    table.addColumn(new Column("name", "VARCHAR(255)", false, false));
     ISqlScriptGenerator scriptGenerator = new CreateTableSqlScriptGenerator();
     String script = scriptGenerator.generateSqlScript(table);
     String expectedScript =
       "CREATE TABLE users (\n" +
-      "\tname VARCHAR(200),\n" +
+      "\tname VARCHAR(255),\n" +
       "\tid INT PRIMARY KEY\n" +
       ");" +
       "\n\n";
@@ -94,7 +94,7 @@ public class SqlScriptGeneratorTest {
   public void testAlterTableSqlScriptGenerator_6() throws Exception {
     Table table = new Table("users");
     ArrayList<Column> columnsToAdd = new ArrayList<Column>();
-    columnsToAdd.add(new Column("email", "VARCHAR(200)", false, false));
+    columnsToAdd.add(new Column("email", "VARCHAR(255)", false, false));
     columnsToAdd.add(new Column("age", "INT", false, false));
     AlterTableContext alterTableContext = AlterTableContext.ADD_COLUMN;
     ISqlScriptGenerator scriptGenerator = new AlterTableSqlScriptGenerator();
@@ -107,7 +107,7 @@ public class SqlScriptGeneratorTest {
 
     String expectedScript =
       "ALTER TABLE users\n" +
-      "ADD COLUMN email VARCHAR(200),\n" +
+      "ADD COLUMN email VARCHAR(255),\n" +
       "ADD COLUMN age INT;" +
       "\n\n";
 
@@ -117,7 +117,7 @@ public class SqlScriptGeneratorTest {
   @Test // alter table drop column
   public void testAlterTableSqlScriptGenerator_7() throws Exception {
     Table table = new Table("users");
-    Column column1 = new Column("email", "VARCHAR(200)", false, false);
+    Column column1 = new Column("email", "VARCHAR(255)", false, false);
     Column column2 = new Column("age", "INT", false, false);
     table.addColumn(column1);
     table.addColumn(column2);
@@ -147,7 +147,7 @@ public class SqlScriptGeneratorTest {
   @Test // unsupported alter table context
   public void testAlterTableSqlScriptGenerator_8() throws Exception {
     Table table = new Table("users");
-    Column column1 = new Column("email", "VARCHAR(200)", false, false);
+    Column column1 = new Column("email", "VARCHAR(255)", false, false);
     Column column2 = new Column("age", "INT", false, false);
     ArrayList<Column> columns = new ArrayList<Column>();
     columns.add(column1);
@@ -167,7 +167,7 @@ public class SqlScriptGeneratorTest {
   @Test // alter table context not provided
   public void testAlterTableSqlScriptGenerator_9() throws Exception {
     Table table = new Table("users");
-    Column column1 = new Column("email", "VARCHAR(200)", false, false);
+    Column column1 = new Column("email", "VARCHAR(255)", false, false);
     Column column2 = new Column("age", "INT", false, false);
     ArrayList<Column> columns = new ArrayList<Column>();
     columns.add(column1);
@@ -217,7 +217,7 @@ public class SqlScriptGeneratorTest {
   @Test // null table non empty columns
   public void testAlterTableSqlScriptGenerator_12() throws Exception {
     Table table = null;
-    Column column1 = new Column("email", "VARCHAR(200)", false, false);
+    Column column1 = new Column("email", "VARCHAR(255)", false, false);
     ArrayList<Column> columns = new ArrayList<Column>();
     columns.add(column1);
     AlterTableContext alterTableContext = AlterTableContext.ADD_COLUMN;
