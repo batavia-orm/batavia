@@ -67,6 +67,8 @@ public class Utils {
         String currentFileContent = new String(Files.readAllBytes(path));
         String newContent = currentFileContent + migrationScript;
         Files.write(path, newContent.getBytes());
+
+        System.out.println("Successfully wrote to the down migration file.");
     } catch (IOException e) {
         throw new IOException("File path not found!");
     }
