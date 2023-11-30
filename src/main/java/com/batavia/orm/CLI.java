@@ -103,6 +103,36 @@ public class CLI {
         ShowMigrationsCommand showMigrationsCommand = new ShowMigrationsCommand();
 
         CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand, migrateCommand, revertCommand, showMigrationsCommand);
+        
+        // Check if there are command-line arguments
+        if (args.length > 0) {
+            // Use the first argument as the command
+            String command = args[0].toLowerCase();
+
+            // Check if the provided command is "migrate"
+            if ("migrate".equals(command)) {
+                migrateCommand.execute();
+                return; 
+            } else if("revert".equals(command)){
+                revertCommand.execute();
+                return;
+            } else if("show".equals(command)){
+                showMigrationsCommand.execute();
+                return;
+            } else if ("generate".equals(command)) {
+                // Check for "generate" command variations
+                if (args.length == 1) {
+                    generateMigrationCommand.execute(); 
+                    return;
+                } else if (args.length == 2) {
+                    new GenerateMigrationCommand(args[1]).execute(); 
+                    return;
+                } else {
+                    System.out.println("Usage: generate OR generate <migration-filename>");
+                    return;
+                }
+            }
+        }
         cli.startCLI();
     }
 }
