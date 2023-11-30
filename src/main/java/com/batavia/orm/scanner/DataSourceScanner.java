@@ -11,7 +11,6 @@ import com.batavia.orm.annotations.PrimaryColumn;
 import com.batavia.orm.annotations.Unique;
 
 import com.batavia.orm.commons.Table;
-import com.batavia.orm.utils.Utils;
 import com.batavia.orm.commons.Column;
 
 import com.github.javaparser.StaticJavaParser;
@@ -40,14 +39,14 @@ public class DataSourceScanner {
   }
 
   private Table convertEntityToTable(ClassOrInterfaceDeclaration entity) {
-    String entityName = Utils.camelCaseToSnakeCase(entity.getNameAsString());
+    String entityName = this.pascalCaseToSnakeCase(entity.getNameAsString());
     Table table = new Table(entityName);
     entity.getMembers().forEach(entityMember -> {
       if (entityMember.isAnnotationPresent(EntityColumn.class)) {
         FieldDeclaration entityField = entityMember.asFieldDeclaration();
         VariableDeclarator fieldVar = entityField.getVariable(0);
 
-        Column tableColumn = new Column(Utils.camelCaseToSnakeCase(fieldVar.getNameAsString()),
+        Column tableColumn = new Column(this.camelCaseToSnakeCase(fieldVar.getNameAsString()),
             fieldVar.getTypeAsString());
         if (entityMember.isAnnotationPresent(PrimaryColumn.class)) {
           tableColumn.setIsPrimaryColumn(true);
@@ -90,4 +89,33 @@ public class DataSourceScanner {
         filteredEntities.add(clazz);
     });
   }
+
+  private String camelCaseToSnakeCase(String camelCaseString) {
+    StringBuilder snakeCaseString = new StringBuilder();
+    for (int i = 0; i < camelCaseString.length(); i++) {
+      char c = camelCaseString.charAt(i);
+      if (i != 0 && Character.isUpperCase(c)) {
+        snakeCaseString.append("_");
+        snakeCaseString.append(Character.toLowerCase(c));
+      } else {
+        snakeCaseString.append(Character.toLowerCase(c));
+      }
+    }
+    return snakeCaseString.toString();
+  }
+
+  private String pascalCaseToSnakeCase(String pascalCaseString) {
+    StringBuilder snakeCaseString = new StringBuilder();
+    for (int i = 0; i < pascalCaseString.length(); i++) {
+      char c = pascalCaseString.charAt(i);
+      if (i != 0 && Character.isUpperCase(c)) {
+        snakeCaseString.append("_");
+        snakeCaseString.append(Character.toLowerCase(c));
+      } else {
+        snakeCaseString.append(Character.toLowerCase(c));
+      }
+    }
+    return snakeCaseString.toString();
+  }
+
 }
