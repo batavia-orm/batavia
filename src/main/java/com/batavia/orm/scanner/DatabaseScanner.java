@@ -25,6 +25,7 @@ public class DatabaseScanner {
       HashMap<String, Table> hashTables = new HashMap<String, Table>();
       while (tables.next()){
         String tableName = tables.getString("TABLE_NAME");
+        if (tableName.equals("batavia_migrations")) continue;
         Table table = this.findTable(tableName);
         hashTables.put(tableName, table);
       }
