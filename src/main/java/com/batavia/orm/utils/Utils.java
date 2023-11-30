@@ -45,9 +45,9 @@ public class Utils {
       String filePath,
       String migrationScript) throws IOException {
     try (
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
       writer.write(migrationScript);
-      System.out.println("Successfully wrote to the file.");
+      System.out.println("Successfully wrote to the up migration file.");
     } catch (IOException e) {
       throw new IOException("File path not found!");
     }
@@ -56,11 +56,10 @@ public class Utils {
   public static void writeToDownMigrationFile(
       String filePath,
       String migrationScript) throws IOException {
-    try {
-      String currentFileContent = new String(
-          Files.readAllBytes(Paths.get(filePath)));
-      String newContent = currentFileContent + migrationScript;
-      Files.write(Paths.get(filePath), newContent.getBytes());
+    try (
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+      writer.write(migrationScript);
+      System.out.println("Successfully wrote to the down migration file.");
     } catch (IOException e) {
       throw new IOException("File path not found!");
     }
