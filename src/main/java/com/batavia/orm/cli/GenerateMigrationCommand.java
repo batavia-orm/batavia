@@ -13,7 +13,10 @@ public class GenerateMigrationCommand implements Command {
     private static final String DATASOURCE_DIR = dotenv.get("DATASOURCE_DIR");
     private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
 
-    public GenerateMigrationCommand(String migrationFilename) {}
+    // Constructor for generation with filename
+    public GenerateMigrationCommand(String migrationFilename) {
+        this.migrationFilename = migrationFilename;
+    }
 
     @Override
     public void execute() {
