@@ -15,23 +15,30 @@ import com.batavia.orm.scanner.DataSourceScanner;
 import com.batavia.orm.scanner.DatabaseScanner;
 
 public class ComparatorMain {
-  public static void main(String[] args) throws SQLException, IOException {
-    System.out.println("Hello World!");
+  private final String migrations_dir;
+  private final String datasource_dir;
+
+  public ComparatorMain(String migrations_dir, String datasource_dir) {
+      this.migrations_dir = migrations_dir;
+      this.datasource_dir = datasource_dir;
+  }
+  public void main(String migrationFilename) throws SQLException, IOException {
     Database dbInstance = Database.getDatabase();
 
-    DataSourceScanner dataSourceScanner = new DataSourceScanner("/Users/enryleinhard/Projects/eclipse/exampleProject/src");
+    DataSourceScanner dataSourceScanner = new DataSourceScanner(datasource_dir);
     DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
 
     HashMap<String, Table> databaseTables = databaseScanner.findAllTables();
     HashMap<String, Table> dataSourceTables = dataSourceScanner.findAllEntities();
 
-    ComparatorMain.comp(dataSourceTables, databaseTables);
+    this.comp(dataSourceTables, databaseTables, migrationFilename);
 
   }
   
-  public static void comp(HashMap<String, Table> local, HashMap<String, Table> remote) {
-    String upSQLFile = "/Users/enryleinhard/Projects/batavia/src/main/java/com/batavia/orm/comparator/up.sql";
-    String downSQLFile = "/Users/enryleinhard/Projects/batavia/src/main/java/com/batavia/orm/comparator/down.sql";
+  public void comp(HashMap<String, Table> local, HashMap<String, Table> remote, String migrationFilename) {
+    String upSQLFile = migrations_dir + "/" + migrationFilename + ".sql";
+    String downSQLFile = migrations_dir + "/" + migrationFilename + ".down.sql";
+
     local.keySet().forEach(localTableName -> {
       if (remote.containsKey(localTableName)) {
         // Table exists in both local and remote
