@@ -61,7 +61,6 @@ public class GeneratorMain {
     try (
       BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
       writer.write(migrationScript);
-      System.out.println("Successfully wrote to the up migration file.");
     } catch (IOException e) {
       throw new IOException("File path not found!");
     }
@@ -92,8 +91,6 @@ public class GeneratorMain {
         String currentFileContent = new String(Files.readAllBytes(path));
         String newContent = currentFileContent + migrationScript;
         Files.write(path, newContent.getBytes());
-
-        System.out.println("Successfully wrote to the down migration file.");
     } catch (IOException e) {
         throw new IOException("File path not found!");
     }

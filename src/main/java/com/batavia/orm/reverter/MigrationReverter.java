@@ -87,7 +87,9 @@ public class MigrationReverter {
     }
 
     private void revertMigration(String migrationFile, Statement statement) throws IOException, SQLException {
-        System.out.println("Reverting migration: " + migrationFile);
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_YELLOW = "\u001B[33m";
+        System.out.println("Reverting migration: " + ANSI_YELLOW + migrationFile + ANSI_RESET);
 
         // Get down migration script filename
         int dotIndex = migrationFile.lastIndexOf('.');

@@ -42,7 +42,6 @@ public class MigrationRunner {
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
                 boolean exists = resultSet.getBoolean(1);
-                System.out.println("Migration table exists: " + exists);
                 return exists;
             }
         }
@@ -57,7 +56,6 @@ public class MigrationRunner {
 
     public File[] getLocalMigrationFiles() {
         File migrationsDir = new File(migrations_dir);
-        System.out.println("Getting local migration files...");
         return migrationsDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".sql") && !name.toLowerCase().endsWith(".down.sql"));
     }
 
@@ -73,12 +71,13 @@ public class MigrationRunner {
 
     private void executeMigration(File migrationFile, Statement statement) throws IOException, SQLException {
         String migrationFileName = migrationFile.getName();
-        System.out.println("Executing migration: " + migrationFileName);
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_YELLOW = "\u001B[33m";
+        System.out.println("Applying migration: " + ANSI_YELLOW + migrationFileName + ANSI_RESET);
         String migrationContent = new String(Files.readAllBytes(Paths.get(migrations_dir + '/' + migrationFileName)), StandardCharsets.UTF_8);
         statement.execute(migrationContent);
 
         String query = "INSERT INTO batavia_migrations (migration_file) VALUES ('" + migrationFileName + "')";
         statement.executeUpdate(query);
-        System.out.println("Migration executed successfully.");
     }
 }

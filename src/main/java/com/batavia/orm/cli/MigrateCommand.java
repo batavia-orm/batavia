@@ -15,11 +15,14 @@ public class MigrateCommand implements Command {
 
     @Override
     public void execute() {
-        System.out.println("Migrating...");
+        System.out.println("\nRunning migrations...\n");
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_GREEN = "\u001B[32m";
 
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);) {
             MigrationRunner migrationRunner = new MigrationRunner(MIGRATIONS_DIR, connection);
-            migrationRunner.migrate();          
+            migrationRunner.migrate(); 
+            System.out.println("\n" + ANSI_GREEN + "Migrations applied. Your database is now in sync with your schema" + ANSI_RESET);
         } catch (SQLException e) {
             e.printStackTrace();
         } 

@@ -17,7 +17,7 @@ public enum AlterTableContext {
     String script = "";
 
     if (table == null || columns == null || columns.size() == 0) {
-      System.out.println("Table or Columns are empty!");
+      // System.out.println("Table or Columns are empty!");
       return script;
     }
 

@@ -73,7 +73,14 @@ public class CLI {
             case "migrate":
                 return migrateCommand;
             case "revert":
-                return revertCommand;
+                if (args.length == 1) {
+                    return revertCommand;
+                } else if (args.length == 2) {
+                    return new RevertCommand(args[1]);
+                } else {
+                    System.out.println("Usage: revert OR revert <previous-migration-filename>");
+                    return null;
+                }
             case "show":
                 return showMigrationsCommand;
             case "help":
@@ -114,8 +121,16 @@ public class CLI {
                 migrateCommand.execute();
                 return; 
             } else if("revert".equals(command)){
-                revertCommand.execute();
-                return;
+                if (args.length == 1) {
+                    revertCommand.execute(); 
+                    return;
+                } else if (args.length == 2) {
+                    new RevertCommand(args[1]).execute(); 
+                    return;
+                } else {
+                    System.out.println("Usage: generate OR generate <migration-filename>");
+                    return;
+                }
             } else if("show".equals(command)){
                 showMigrationsCommand.execute();
                 return;
