@@ -11,6 +11,7 @@ src/test/java/com/batavia/orm/generator/script-to-file-generator-tests/down-scri
 .classpath
 .project
 .settings/
+
 # maven
 bin/
 target/

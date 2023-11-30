@@ -15,7 +15,7 @@ public class Column {
 
   public Column(String columnName, String columnType, Boolean isPrimaryColumn, Boolean isUnique) {
     this.columnName = columnName;
-    this.columnType = Types.getSqlType(columnType);
+    this.columnType = columnType;
     this.isPrimaryColumn = isPrimaryColumn;
     this.isUnique = isPrimaryColumn ? true : isUnique;
   }
@@ -42,5 +42,9 @@ public class Column {
 
   public Boolean isUnique() {
     return isUnique;
+  }
+
+  public String toString() {
+    return "Column: " + columnName + "--" + columnType + "--" + isPrimaryColumn + "--" + isUnique;
   }
 }

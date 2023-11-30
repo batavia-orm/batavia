@@ -42,7 +42,7 @@ public class MigrationRunner {
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
                 boolean exists = resultSet.getBoolean(1);
-                System.out.println("Exists: " + exists);
+                System.out.println("Migration table exists: " + exists);
                 return exists;
             }
         }
@@ -58,7 +58,7 @@ public class MigrationRunner {
     public File[] getLocalMigrationFiles() {
         File migrationsDir = new File(migrations_dir);
         System.out.println("Getting local migration files...");
-        return migrationsDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".sql"));
+        return migrationsDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".sql") && !name.toLowerCase().endsWith(".down.sql"));
     }
 
     private boolean migrationIsUnapplied(File migrationFile, Statement statement) throws SQLException {
