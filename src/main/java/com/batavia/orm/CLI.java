@@ -62,11 +62,13 @@ public class CLI {
         String command = args[0].toLowerCase();
         switch (command) {
             case "generate":
-                if (args.length < 2) {
-                    System.out.println("Usage: --generate-migration <migration-filename>");
-                    return null;
-                } else {
+                if (args.length == 1) {
                     return generateMigrationCommand;
+                } else if (args.length == 2) {
+                    return new GenerateMigrationCommand(args[1]);
+                } else {
+                    System.out.println("Usage: generate OR generate <migration-filename>");
+                    return null;
                 }
             case "migrate":
                 return migrateCommand;
@@ -95,7 +97,7 @@ public class CLI {
     }
 
     public static void main(String[] args) {
-        GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("your_migration_filename");
+        GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("automatic");
         MigrateCommand migrateCommand = new MigrateCommand();
         RevertCommand revertCommand = new RevertCommand();
         ShowMigrationsCommand showMigrationsCommand = new ShowMigrationsCommand();
