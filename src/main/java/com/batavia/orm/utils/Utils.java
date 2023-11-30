@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Utils {
 
@@ -72,5 +74,13 @@ public class Utils {
     } catch (IOException e) {
         throw new IOException("File path not found!");
     }
+  }
+
+  public static String generateTimestampedMigrationFilename(String migration_name) {
+    LocalDateTime timestamp = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
+    String formattedTimestamp = timestamp.format(formatter);
+
+    return formattedTimestamp + "_" + migration_name;
   }
 }
