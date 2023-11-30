@@ -11,12 +11,14 @@ import com.batavia.orm.annotations.PrimaryColumn;
 import com.batavia.orm.annotations.Unique;
 
 import com.batavia.orm.commons.Table;
+import com.batavia.orm.utils.Utils;
 import com.batavia.orm.commons.Column;
 
 import com.github.javaparser.StaticJavaParser;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 
 public class DataSourceScanner {
@@ -38,14 +40,15 @@ public class DataSourceScanner {
   }
 
   private Table convertEntityToTable(ClassOrInterfaceDeclaration entity) {
-    String entityName = entity.getNameAsString();
+    String entityName = Utils.camelCaseToSnakeCase(entity.getNameAsString());
     Table table = new Table(entityName);
-
     entity.getMembers().forEach(entityMember -> {
       if (entityMember.isAnnotationPresent(EntityColumn.class)) {
-        VariableDeclarator entityField = entityMember.asFieldDeclaration().getVariable(0); 
-        Column tableColumn = new Column(entityField.getNameAsString(), entityField.getTypeAsString());
+        FieldDeclaration entityField = entityMember.asFieldDeclaration();
+        VariableDeclarator fieldVar = entityField.getVariable(0);
 
+        Column tableColumn = new Column(Utils.camelCaseToSnakeCase(fieldVar.getNameAsString()),
+            fieldVar.getTypeAsString());
         if (entityMember.isAnnotationPresent(PrimaryColumn.class)) {
           tableColumn.setIsPrimaryColumn(true);
           tableColumn.setIsUnique(true);
@@ -79,7 +82,8 @@ public class DataSourceScanner {
     return Files.isRegularFile(path) && path.toString().endsWith(".java");
   }
 
-  private void filterEntityClasses(Path path, ArrayList<ClassOrInterfaceDeclaration> filteredEntities) throws FileNotFoundException{
+  private void filterEntityClasses(Path path, ArrayList<ClassOrInterfaceDeclaration> filteredEntities)
+      throws FileNotFoundException {
     CompilationUnit cUnit = StaticJavaParser.parse(path.toFile());
     cUnit.findAll(ClassOrInterfaceDeclaration.class).forEach(clazz -> {
       if (clazz.isAnnotationPresent(Entity.class))

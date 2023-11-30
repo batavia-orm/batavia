@@ -4,9 +4,14 @@
 #env
 .env
 
+#testing file
+src/test/java/com/batavia/orm/generator/script-to-file-generator-tests/up-script-test.sql
+src/test/java/com/batavia/orm/generator/script-to-file-generator-tests/down-script-test.sql
+
 .classpath
 .project
 .settings/
+
 # maven
 bin/
 target/
