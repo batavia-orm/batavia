@@ -81,10 +81,6 @@ public class Utils {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmmss");
     String formattedTimestamp = timestamp.format(formatter);
 
-    if (migration_name == null) {
-        migration_name = "auto";
-    }
-
     return formattedTimestamp + "_" + migration_name;
   }
 }
