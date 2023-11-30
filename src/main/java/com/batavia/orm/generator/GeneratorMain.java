@@ -2,8 +2,13 @@ package com.batavia.orm.generator;
 
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
-import com.batavia.orm.utils.Utils;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 // Strategy PATTERN
@@ -50,6 +55,18 @@ public class GeneratorMain {
     writeDownSqlScript(sqlCommand, alterTableContext);
   }
 
+  private void writeToUpMigrationFile(
+      String filePath,
+      String migrationScript) throws IOException {
+    try (
+      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+      writer.write(migrationScript);
+      System.out.println("Successfully wrote to the up migration file.");
+    } catch (IOException e) {
+      throw new IOException("File path not found!");
+    }
+  }
+
   private void writeUpSqlScript(
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
@@ -59,7 +76,27 @@ public class GeneratorMain {
       this.columnsToBeApplied,
       alterTableContext
     );
-    Utils.writeToUpMigrationFile(this.upMigrationFilePath, upScript);
+    this.writeToUpMigrationFile(this.upMigrationFilePath, upScript);
+  }
+
+  private void writeToDownMigrationFile(
+      String filePath,
+      String migrationScript) throws IOException {
+    try {
+        Path path = Paths.get(filePath);
+
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+
+        String currentFileContent = new String(Files.readAllBytes(path));
+        String newContent = currentFileContent + migrationScript;
+        Files.write(path, newContent.getBytes());
+
+        System.out.println("Successfully wrote to the down migration file.");
+    } catch (IOException e) {
+        throw new IOException("File path not found!");
+    }
   }
 
   private void writeDownSqlScript(
@@ -82,7 +119,7 @@ public class GeneratorMain {
       downAlterTableContext
     );
 
-    Utils.writeToDownMigrationFile(this.downMigrationFilePath, downScript);
+    this.writeToDownMigrationFile(this.downMigrationFilePath, downScript);
   }
 
   private ArrayList<Object> getDownSqlScriptContext(
