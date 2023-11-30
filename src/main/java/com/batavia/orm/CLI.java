@@ -1,38 +1,106 @@
 package com.batavia.orm;
-import com.batavia.orm.comparator.ComparatorMain;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import com.batavia.orm.cli.Command;
+import com.batavia.orm.cli.GenerateMigrationCommand;
+import com.batavia.orm.cli.MigrateCommand;
+import com.batavia.orm.cli.ShowMigrationsCommand;
+import com.batavia.orm.cli.RevertCommand;
 
 public class CLI {
-    public static void proccessCommands(String[] args){
-        if(args.length == 0){
-            System.out.println("Please provide a command.");
-            return;
-        }
-        // TODO: parse the command from scanner class
+    private final BufferedReader reader;
+    private final GenerateMigrationCommand generateMigrationCommand;
+    private final MigrateCommand migrateCommand;
+    private final RevertCommand revertCommand;
+    private final ShowMigrationsCommand showMigrationsCommand;
 
-        String command = args[0];
-        if(command == null){
-            System.out.println("Invalid command.");
-            return;
-        }
+    public CLI(BufferedReader reader, GenerateMigrationCommand generateMigrationCommand, MigrateCommand migrateCommand, RevertCommand revertCommand, ShowMigrationsCommand showMigrationsCommand) {
+        this.reader = reader;
+        this.generateMigrationCommand = generateMigrationCommand;
+        this.migrateCommand = migrateCommand;
+        this.revertCommand = revertCommand;
+        this.showMigrationsCommand = showMigrationsCommand;
+    }
 
-        // Initialize necessary components
-        ComparatorMain comparator = new ComparatorMain();
+    public void startCLI() {
+        boolean continueRunning = true;
+        while (continueRunning) {
+            try {
+                System.out.print("Please provide a command: ");
+                String userInput = reader.readLine();
 
-        switch (command) {
-            case "generate-migration":
-                if (args.length < 2) {
-                    System.out.println("Usage: batavia generate-migration <migration-filename>");
-                    return;
+                if (userInput.equalsIgnoreCase("exit") || userInput.equalsIgnoreCase("quit") || userInput.trim().isEmpty()) {
+                    System.out.println("Exiting...");
+                    break;
                 }
-                String migrationFilename = args[1];
-                break;
+
+                String[] args = userInput.split("\\s+");
+
+                Command command = parseCommand(args);
+
+                if (command != null) {
+                    command.execute();
+                } else {
+                    System.out.println("Unknown command. Type 'help' for available commands.");
+                }
+
+            } catch (IOException e) {
+                System.out.println("Error reading input: " + e.getMessage());
+                continueRunning = false;
+            }
+        }
+    }
+
+    private Command parseCommand(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Error: No command provided.");
+            return null;
+        }
+
+        String command = args[0].toLowerCase();
+        switch (command) {
+            case "generate":
+                if (args.length < 2) {
+                    System.out.println("Usage: --generate-migration <migration-filename>");
+                    return null;
+                } else {
+                    return generateMigrationCommand;
+                }
             case "migrate":
-                break;
-            case "show-migrations":
-                break;
+                return migrateCommand;
+            case "revert":
+                return revertCommand;
+            case "show":
+                return showMigrationsCommand;
+            case "help":
+                printUsage();
+                return null;
             default:
                 System.out.println("Unknown command: " + command);
-                break;
+                printUsage();
+                return null;
         }
+    }
+
+    private void printUsage() {
+        System.out.println("Available commands: ");
+        System.out.println("  generate <migration-filename>: Generate a migration");
+        System.out.println("  migrate: Migrate");
+        System.out.println("  revert: Revert");
+        System.out.println("  show: Show migrations");
+        System.out.println("  help: Display available commands");
+        System.out.println("  exit/quit: Exit the CLI");
+    }
+
+    public static void main(String[] args) {
+        GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("your_migration_filename");
+        MigrateCommand migrateCommand = new MigrateCommand();
+        RevertCommand revertCommand = new RevertCommand();
+        ShowMigrationsCommand showMigrationsCommand = new ShowMigrationsCommand();
+
+        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand, migrateCommand, revertCommand, showMigrationsCommand);
+        cli.startCLI();
     }
 }
