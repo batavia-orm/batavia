@@ -12,11 +12,13 @@ public class RevertCommand implements Command{
     private static final Dotenv dotenv = Dotenv.load();
     private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
     private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
+    private Receiver receiver;
 
-    public RevertCommand(String migrationToRevertTo) {
+    public RevertCommand(Receiver receiver, String migrationToRevertTo) {
+        this.receiver = receiver;
         this.migrationToRevertTo = migrationToRevertTo;
     }
-
+    
     public RevertCommand() {}
 
     @Override

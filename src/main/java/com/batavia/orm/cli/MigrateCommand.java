@@ -12,6 +12,11 @@ public class MigrateCommand implements Command {
     private static final Dotenv dotenv = Dotenv.load();
     private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
     private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
+    private Receiver receiver;
+    
+    public MigrateCommand(Receiver receiver) {
+        this.receiver = receiver;
+    }
 
     @Override
     public void execute() {

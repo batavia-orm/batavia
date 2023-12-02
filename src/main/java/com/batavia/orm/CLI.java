@@ -3,27 +3,44 @@ package com.batavia.orm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.batavia.orm.cli.Command;
 import com.batavia.orm.cli.GenerateMigrationCommand;
 import com.batavia.orm.cli.MigrateCommand;
+import com.batavia.orm.cli.Receiver;
 import com.batavia.orm.cli.ShowMigrationsCommand;
 import com.batavia.orm.cli.RevertCommand;
 
 public class CLI {
     private final BufferedReader reader;
+    private final Map<String, Command> commandMap = new HashMap<>();
+
     private final GenerateMigrationCommand generateMigrationCommand;
     private final MigrateCommand migrateCommand;
     private final RevertCommand revertCommand;
     private final ShowMigrationsCommand showMigrationsCommand;
 
-    public CLI(BufferedReader reader, GenerateMigrationCommand generateMigrationCommand, MigrateCommand migrateCommand, RevertCommand revertCommand, ShowMigrationsCommand showMigrationsCommand) {
+    public CLI(BufferedReader reader) {
         this.reader = reader;
-        this.generateMigrationCommand = generateMigrationCommand;
-        this.migrateCommand = migrateCommand;
-        this.revertCommand = revertCommand;
-        this.showMigrationsCommand = showMigrationsCommand;
-    }
 
+        // Create a receiver
+        Receiver receiver = new Receiver();
+
+        // Initialize commands
+        this.generateMigrationCommand = new GenerateMigrationCommand(receiver, "automatic");
+        this.migrateCommand = new MigrateCommand(receiver);
+        this.revertCommand = new RevertCommand(receiver, "previous-migration-filename");
+        this.showMigrationsCommand = new ShowMigrationsCommand(receiver);
+
+        // Put all the commands in the hashmap
+        commandMap.put("generate", this.generateMigrationCommand);
+        commandMap.put("migrate", this.migrateCommand);
+        commandMap.put("revert", this.revertCommand);
+        commandMap.put("show", this.showMigrationsCommand);
+    }
+    
     public void startCLI() {
         boolean continueRunning = true;
         while (continueRunning) {
@@ -59,38 +76,15 @@ public class CLI {
             return null;
         }
 
-        String command = args[0].toLowerCase();
-        switch (command) {
-            case "generate":
-                if (args.length == 1) {
-                    return generateMigrationCommand;
-                } else if (args.length == 2) {
-                    return new GenerateMigrationCommand(args[1]);
-                } else {
-                    System.out.println("Usage: generate OR generate <migration-filename>");
-                    return null;
-                }
-            case "migrate":
-                return migrateCommand;
-            case "revert":
-                if (args.length == 1) {
-                    return revertCommand;
-                } else if (args.length == 2) {
-                    return new RevertCommand(args[1]);
-                } else {
-                    System.out.println("Usage: revert OR revert <previous-migration-filename>");
-                    return null;
-                }
-            case "show":
-                return showMigrationsCommand;
-            case "help":
-                printUsage();
-                return null;
-            default:
-                System.out.println("Unknown command: " + command);
-                printUsage();
-                return null;
+        String commandName = args[0].toLowerCase();
+        Command command = commandMap.get(commandName);
+
+        if (command == null) {
+            System.out.println("Unknown command: " + commandName);
+            printUsage();
         }
+
+        return command;
     }
 
     private void printUsage() {
@@ -104,50 +98,8 @@ public class CLI {
     }
 
     public static void main(String[] args) {
-        GenerateMigrationCommand generateMigrationCommand = new GenerateMigrationCommand("automatic");
-        MigrateCommand migrateCommand = new MigrateCommand();
-        RevertCommand revertCommand = new RevertCommand();
-        ShowMigrationsCommand showMigrationsCommand = new ShowMigrationsCommand();
-
-        CLI cli = new CLI(new BufferedReader(new InputStreamReader(System.in)), generateMigrationCommand, migrateCommand, revertCommand, showMigrationsCommand);
-        
-        // Check if there are command-line arguments
-        if (args.length > 0) {
-            // Use the first argument as the command
-            String command = args[0].toLowerCase();
-
-            // Check if the provided command is "migrate"
-            if ("migrate".equals(command)) {
-                migrateCommand.execute();
-                return; 
-            } else if("revert".equals(command)){
-                if (args.length == 1) {
-                    revertCommand.execute(); 
-                    return;
-                } else if (args.length == 2) {
-                    new RevertCommand(args[1]).execute(); 
-                    return;
-                } else {
-                    System.out.println("Usage: generate OR generate <migration-filename>");
-                    return;
-                }
-            } else if("show".equals(command)){
-                showMigrationsCommand.execute();
-                return;
-            } else if ("generate".equals(command)) {
-                // Check for "generate" command variations
-                if (args.length == 1) {
-                    generateMigrationCommand.execute(); 
-                    return;
-                } else if (args.length == 2) {
-                    new GenerateMigrationCommand(args[1]).execute(); 
-                    return;
-                } else {
-                    System.out.println("Usage: generate OR generate <migration-filename>");
-                    return;
-                }
-            }
-        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        CLI cli = new CLI(reader);
         cli.startCLI();
     }
 }

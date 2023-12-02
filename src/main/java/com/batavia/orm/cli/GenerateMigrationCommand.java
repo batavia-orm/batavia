@@ -8,15 +8,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class GenerateMigrationCommand implements Command {
-
   private String migrationFilename;
   private static final Dotenv dotenv = Dotenv.load();
   private static final String DATASOURCE_DIR = dotenv.get("DATASOURCE_DIR");
   private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
+  private Receiver receiver;
 
-  // Constructor for generation with filename
-  public GenerateMigrationCommand(String migrationFilename) {
+  public GenerateMigrationCommand(Receiver receiver, String migrationFilename) {
+    this.receiver = receiver;
     this.migrationFilename = migrationFilename;
+}
+
+  public GenerateMigrationCommand(Receiver receiver) {
+      this(receiver, "last");
   }
 
   @Override
