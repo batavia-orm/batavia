@@ -1,6 +1,5 @@
 package com.batavia.orm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import com.batavia.orm.cli.GenerateMigrationCommand;
 import com.batavia.orm.cli.MigrateCommand;
@@ -49,24 +48,6 @@ class CLITest {
         assertEquals("Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
     
     }
-
-    // @Test
-    // public void testGenerateCommand() throws IOException {
-    //     // Create a mock BufferedReader
-    //     BufferedReader reader = Mockito.mock(BufferedReader.class);
-
-    //     // When readLine is called on the reader, return "generate" then "exit"
-    //     Mockito.when(reader.readLine()).thenReturn("generate").thenReturn("exit");
-
-    //     // Create an instance of CLI with the mock reader
-    //     CLI cli = new CLI(reader);
-
-    //     // Call the method to test
-    //     cli.startCLI();
-
-    //     // Verify that readLine was called on the reader
-    //     Mockito.verify(reader, Mockito.times(2)).readLine();
-    // }
 
     // @Test
     // void testParseCommand_GenerateMigrationCommand() throws Exception {
@@ -151,32 +132,31 @@ class CLITest {
 //         verify(mockCommand, times(1)).execute();
 //     }
 
-//     @Test
-//     void testStartCLI_ShowMigrationsCommand() throws Exception{
-//         // Create a mock instance of GenerateMigrationCommand
-//         ShowMigrationsCommand  mockCommand = Mockito.mock(ShowMigrationsCommand.class);
+    @Test
+    void testStartCLI_ShowMigrationsCommand() throws Exception{
+        // Create a mock instance of GenerateMigrationCommand
+        ShowMigrationsCommand  mockCommand = Mockito.mock(ShowMigrationsCommand.class);
 
-//         // Use Mockito to configure the mock
-//         doNothing().when(mockCommand).execute();
+        // Use Mockito to configure the mock
+        doNothing().when(mockCommand).execute();
 
-//         // Create a mock BufferedReader that returns "show" when readLine() is called
-//         BufferedReader mockReader = Mockito.mock(BufferedReader.class);
-//         Mockito.when(mockReader.readLine()).thenReturn("show", "exit");
+        // Create a mock BufferedReader that returns "show" when readLine() is called
+        BufferedReader mockReader = Mockito.mock(BufferedReader.class);
+        Mockito.when(mockReader.readLine()).thenReturn("show", "exit");
 
-//         // Capture System.out for verification
-//         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-//         System.setOut(new PrintStream(outputStreamCaptor));
+        // Capture System.out for verification
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStreamCaptor));
 
-//         // Create an instance of CLI with the mock command
-//         CLI cli = new CLI(mockReader, null, null, null, mockCommand);
+        // Create an instance of CLI with the mock command
+        CLI cli = new CLI(mockReader);
 
-//         // Execute
-//         cli.startCLI();
+        cli.startCLI();
 
-//         // Verify
-//         assertEquals("Please provide a command: Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
-//         verify(mockCommand, times(1)).execute();
-//     }
+        String expectedOutput = "Please provide a command: Showing migrations...\n" +
+                "Please provide a command: Exiting...";
+        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+    }
 
 //     @Test
 //     void testStartCLI_RevertCommand() throws Exception{
@@ -204,23 +184,6 @@ class CLITest {
 //         assertEquals("Please provide a command: Please provide a command: Exiting...", outputStreamCaptor.toString().trim());
 //         verify(mockCommand, times(1)).execute();
 //     }
-
-// //    @Test
-// //    void testRevertCommand_execute() {
-// //        // Create an instance of RevertCommand
-// //        RevertCommand revertCommand = new RevertCommand();
-// //
-// //        // Capture System.out for verification
-// //        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-// //        System.setOut(new PrintStream(outputStreamCaptor));
-// //
-// //        // Execute
-// //        revertCommand.execute();
-// //
-// //        // Verify
-// //        String expectedOutput = "Migrating...";
-// //        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
-// //    }
 
     @Test
     void testParseCommand_HelpCommand() throws Exception {
