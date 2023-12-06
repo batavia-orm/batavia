@@ -7,8 +7,14 @@ assignees: ''
 
 ---
 
+**Product**
+BataviaORM
+
 **Describe the bug**
 A clear and concise description of what the bug is.
+
+**Severity**
+Critical/High/Medium/Low
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -20,13 +26,10 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+ - Java Version [e.g. 19.0.0]
+ - Database [e.g. Postgres 15]
 
-**Additional context**
-Add any other context about the problem here.
+**Assigned To:**
+Name of engineer
