@@ -1,6 +1,6 @@
 package com.batavia.orm.cli;
 
-import com.batavia.orm.comparator.ComparatorMain;
+import com.batavia.orm.comparator.Comparator;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,11 +29,11 @@ public class GenerateMigrationCommand implements Command {
       String ANSI_GREEN = "\u001B[32m";
       String ANSI_YELLOW = "\u001B[33m";
       System.out.println("\nGenerating migration: " + ANSI_YELLOW + stampedFilename + ANSI_RESET + "\n");
-      ComparatorMain comparatorMain = new ComparatorMain(
+      Comparator comparator = new Comparator(
         MIGRATIONS_DIR,
         DATASOURCE_DIR
       );
-      comparatorMain.main(stampedFilename);
+      comparator.run(stampedFilename);
       System.out.println("\n" + ANSI_GREEN + "Migration file generated successfully" + ANSI_RESET);
     } catch (SQLException | IOException e) {
       e.printStackTrace();
