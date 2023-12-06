@@ -53,15 +53,14 @@ public class Comparator {
             Column localColumn = localTable.getColumns().get(localColumnName);
             Column remoteColumn = remoteTable.getColumns().get(localColumnName);
 
-            // if (!localColumn.getColumnType().equals(remoteColumn.getColumnType())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different type");
-            // }
-            // if (!localColumn.isPrimary().equals(remoteColumn.isPrimary())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different primary key");
-            // }
-            // if (!localColumn.isUnique().equals(remoteColumn.isUnique())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different unique");
-            // }
+            Boolean isTypeSame = localColumn.getColumnType().equals(remoteColumn.getColumnType());
+            Boolean isStillPrimary = localColumn.isPrimary().equals(remoteColumn.isPrimary());
+            Boolean isStillUnique = localColumn.isUnique().equals(remoteColumn.isUnique());
+
+            if (!isTypeSame || !isStillPrimary || !isStillUnique) {
+              addColumns.add(local.get(localTableName).getColumns().get(localColumnName));
+              System.out.println("\u2713 " + "create column " + localColumnName + " in remote");
+            }
           } else {
             addColumns.add(local.get(localTableName).getColumns().get(localColumnName));
             System.out.println("\u2713 " + "create column " + localColumnName + " in remote");
@@ -124,16 +123,14 @@ public class Comparator {
             Column localColumn = localTable.getColumns().get(remoteColumnName);
             Column remoteColumn = remoteTable.getColumns().get(remoteColumnName);
 
-            // if (!localColumn.getColumnType().equals(remoteColumn.getColumnType())) {
+            Boolean isTypeSame = localColumn.getColumnType().equals(remoteColumn.getColumnType());
+            Boolean isStillPrimary = localColumn.isPrimary().equals(remoteColumn.isPrimary());
+            Boolean isStillUnique = localColumn.isUnique().equals(remoteColumn.isUnique());
 
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different type, it should be " + localColumn.getColumnType() + " instead ");
-            // }
-            // if (!localColumn.isPrimary().equals(remoteColumn.isPrimary())) {
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different primary key, it should be " + localColumn.isPrimary() + " instead");
-            // }
-            // if (!localColumn.isUnique().equals(remoteColumn.isUnique())) {
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different unique, it should be " + localColumn.isUnique() + " instead");
-            // }
+            if (!isTypeSame || !isStillPrimary || !isStillUnique) {
+              dropColumns.add(remote.get(remoteTableName).getColumns().get(remoteColumnName));
+              System.out.println("\u2713 " + "drop column " + remoteColumnName + " in remote");
+            }
           } else {
             // Column exists in remote but not in local
             // Drop column in remote
