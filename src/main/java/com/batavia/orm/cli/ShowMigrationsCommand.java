@@ -1,15 +1,15 @@
 package com.batavia.orm.cli;
 
-// Concrete command for showing migrations
 public class ShowMigrationsCommand implements Command {
-    private Receiver receiver;
 
-    public ShowMigrationsCommand(Receiver receiver) {
-        this.receiver = receiver;
-    }
+  private Receiver receiver;
 
-    @Override
-    public void execute() {
-        System.out.println("Showing migrations...");
-    }
+  public ShowMigrationsCommand(Receiver receiver) {
+    this.receiver = receiver;
+  }
+
+  @Override
+  public void execute() {
+    receiver.showMigrations();
+  }
 }
