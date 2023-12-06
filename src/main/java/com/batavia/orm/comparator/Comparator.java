@@ -14,11 +14,11 @@ import com.batavia.orm.generator.sqlScriptGenerators.AlterTableContext;
 import com.batavia.orm.scanner.DataSourceScanner;
 import com.batavia.orm.scanner.DatabaseScanner;
 
-public class ComparatorMain {
+public class Comparator {
   private final String migrations_dir;
   private final String datasource_dir;
 
-  public ComparatorMain(String migrations_dir, String datasource_dir) {
+  public Comparator(String migrations_dir, String datasource_dir) {
       this.migrations_dir = migrations_dir;
       this.datasource_dir = datasource_dir;
   }
