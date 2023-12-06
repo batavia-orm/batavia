@@ -83,11 +83,6 @@ public class CLI {
   }
 
   private Command parseCommand(String[] args) {
-    if (args.length < 1) {
-      System.out.println("Error: No command provided.");
-      return null;
-    }
-
     String commandName = args[0].toLowerCase();
     Command command = commandMap.get(commandName);
 
@@ -125,12 +120,4 @@ public class CLI {
         cli.startCLI();
     }
 }
-//   public static void main(String[] args) {
-    
-//     BufferedReader reader = new BufferedReader(
-//       new InputStreamReader(System.in)
-//     );
-//     CLI cli = new CLI(reader);
-//     cli.startCLI();
-//   }
 }
