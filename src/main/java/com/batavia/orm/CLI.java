@@ -114,6 +114,23 @@ public class CLI {
       new InputStreamReader(System.in)
     );
     CLI cli = new CLI(reader);
-    cli.startCLI();
-  }
+    if (args.length > 0) {
+        String command = args[0];
+        if (cli.commandMap.containsKey(command)) {
+            cli.commandMap.get(command).execute();
+        } else {
+            System.out.println("Invalid command. Please use 'help' to get a list of valid commands.");
+        }
+    } else {
+        cli.startCLI();
+    }
+}
+//   public static void main(String[] args) {
+    
+//     BufferedReader reader = new BufferedReader(
+//       new InputStreamReader(System.in)
+//     );
+//     CLI cli = new CLI(reader);
+//     cli.startCLI();
+//   }
 }
