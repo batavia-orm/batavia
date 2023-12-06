@@ -33,6 +33,7 @@ public class Receiver {
         ANSI_RESET +
         "\n"
       );
+
       Comparator comparator = new Comparator(
         MIGRATIONS_DIR,
         DATASOURCE_DIR
