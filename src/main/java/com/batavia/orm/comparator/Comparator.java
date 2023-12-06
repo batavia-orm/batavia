@@ -22,7 +22,7 @@ public class Comparator {
       this.migrations_dir = migrations_dir;
       this.datasource_dir = datasource_dir;
   }
-  public void main(String migrationFilename) throws SQLException, IOException {
+  public void run(String migrationFilename) throws SQLException, IOException {
     Database dbInstance = Database.getDatabase();
 
     DataSourceScanner dataSourceScanner = new DataSourceScanner(datasource_dir);
@@ -31,11 +31,10 @@ public class Comparator {
     HashMap<String, Table> databaseTables = databaseScanner.findAllTables();
     HashMap<String, Table> dataSourceTables = dataSourceScanner.findAllEntities();
 
-    this.comp(dataSourceTables, databaseTables, migrationFilename);
-
+    this.compare(dataSourceTables, databaseTables, migrationFilename);
   }
   
-  public void comp(HashMap<String, Table> local, HashMap<String, Table> remote, String migrationFilename) {
+  public void compare(HashMap<String, Table> local, HashMap<String, Table> remote, String migrationFilename) {
     String upSQLFile = migrations_dir + "/" + migrationFilename + ".sql";
     String downSQLFile = migrations_dir + "/" + migrationFilename + ".down.sql";
 

@@ -39,7 +39,7 @@ public class ComparatorTest {
     remoteTables.put("table_a", tableA);
 
     Comparator comparator = new Comparator(tempDir.toString(), ".");
-    comparator.comp(localTables, remoteTables, "comparatorTest");
+    comparator.compare(localTables, remoteTables, "comparatorTest");
 
 
     String upSQLContent = Files.readString(upSQLPath);
@@ -65,7 +65,7 @@ public class ComparatorTest {
     remoteTables.put("table_b", tableB);
 
     Comparator comparator = new Comparator(tempDir.toString(), ".");
-    comparator.comp(localTables, remoteTables, "comparatorTest");
+    comparator.compare(localTables, remoteTables, "comparatorTest");
 
 
     String upSQLContent = Files.readString(upSQLPath);
@@ -93,7 +93,7 @@ public class ComparatorTest {
     remoteTables.put("table_a", remoteTableA);
 
     Comparator comparator = new Comparator(tempDir.toString(), ".");
-    comparator.comp(localTables, remoteTables, "comparatorTest");
+    comparator.compare(localTables, remoteTables, "comparatorTest");
 
 
     String upSQLContent = Files.readString(upSQLPath);
@@ -122,7 +122,7 @@ public class ComparatorTest {
     remoteTables.put("table_a", remoteTableA);
 
     Comparator comparator = new Comparator(tempDir.toString(), ".");
-    comparator.comp(localTables, remoteTables, "comparatorTest");
+    comparator.compare(localTables, remoteTables, "comparatorTest");
 
 
     String upSQLContent = Files.readString(upSQLPath);
