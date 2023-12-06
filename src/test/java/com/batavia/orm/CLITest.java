@@ -70,6 +70,34 @@ class CLITest {
   }
 
   @Test
+  void testRevertCommand() throws IOException {
+    Command revertCommand = mock(Command.class);
+    when(reader.readLine()).thenReturn("revert", "exit");
+
+    Map<String, Command> commandMap = new HashMap<>();
+    commandMap.put("revert", revertCommand);
+
+    CLI cli = new CLI(reader, commandMap);
+    cli.startCLI();
+    verify(reader, times(2)).readLine();
+    verify(revertCommand, times(1)).execute();
+  }
+
+  @Test
+  void testShowMigrationsCommand() throws IOException {
+    Command showCommand = mock(Command.class);
+    when(reader.readLine()).thenReturn("show", "exit");
+
+    Map<String, Command> commandMap = new HashMap<>();
+    commandMap.put("show", showCommand);
+
+    CLI cli = new CLI(reader, commandMap);
+    cli.startCLI();
+    verify(reader, times(2)).readLine();
+    verify(showCommand, times(1)).execute();
+  }
+
+  @Test
   void testUnknownCommand() throws IOException {
     ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outContent));
