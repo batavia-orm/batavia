@@ -14,15 +14,15 @@ import com.batavia.orm.generator.sqlScriptGenerators.AlterTableContext;
 import com.batavia.orm.scanner.DataSourceScanner;
 import com.batavia.orm.scanner.DatabaseScanner;
 
-public class ComparatorMain {
+public class Comparator {
   private final String migrations_dir;
   private final String datasource_dir;
 
-  public ComparatorMain(String migrations_dir, String datasource_dir) {
+  public Comparator(String migrations_dir, String datasource_dir) {
       this.migrations_dir = migrations_dir;
       this.datasource_dir = datasource_dir;
   }
-  public void main(String migrationFilename) throws SQLException, IOException {
+  public void run(String migrationFilename) throws SQLException, IOException {
     Database dbInstance = Database.getDatabase();
 
     DataSourceScanner dataSourceScanner = new DataSourceScanner(datasource_dir);
@@ -31,11 +31,10 @@ public class ComparatorMain {
     HashMap<String, Table> databaseTables = databaseScanner.findAllTables();
     HashMap<String, Table> dataSourceTables = dataSourceScanner.findAllEntities();
 
-    this.comp(dataSourceTables, databaseTables, migrationFilename);
-
+    this.compare(dataSourceTables, databaseTables, migrationFilename);
   }
   
-  public void comp(HashMap<String, Table> local, HashMap<String, Table> remote, String migrationFilename) {
+  public void compare(HashMap<String, Table> local, HashMap<String, Table> remote, String migrationFilename) {
     String upSQLFile = migrations_dir + "/" + migrationFilename + ".sql";
     String downSQLFile = migrations_dir + "/" + migrationFilename + ".down.sql";
 
@@ -54,15 +53,14 @@ public class ComparatorMain {
             Column localColumn = localTable.getColumns().get(localColumnName);
             Column remoteColumn = remoteTable.getColumns().get(localColumnName);
 
-            // if (!localColumn.getColumnType().equals(remoteColumn.getColumnType())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different type");
-            // }
-            // if (!localColumn.isPrimary().equals(remoteColumn.isPrimary())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different primary key");
-            // }
-            // if (!localColumn.isUnique().equals(remoteColumn.isUnique())) {
-            //   System.out.println("Column " + localColumnName + " in table " + localTableName + " has different unique");
-            // }
+            Boolean isTypeSame = localColumn.getColumnType().equals(remoteColumn.getColumnType());
+            Boolean isStillPrimary = localColumn.isPrimary().equals(remoteColumn.isPrimary());
+            Boolean isStillUnique = localColumn.isUnique().equals(remoteColumn.isUnique());
+
+            if (!isTypeSame || !isStillPrimary || !isStillUnique) {
+              addColumns.add(local.get(localTableName).getColumns().get(localColumnName));
+              System.out.println("\u2713 " + "create column " + localColumnName + " in remote");
+            }
           } else {
             addColumns.add(local.get(localTableName).getColumns().get(localColumnName));
             System.out.println("\u2713 " + "create column " + localColumnName + " in remote");
@@ -125,16 +123,14 @@ public class ComparatorMain {
             Column localColumn = localTable.getColumns().get(remoteColumnName);
             Column remoteColumn = remoteTable.getColumns().get(remoteColumnName);
 
-            // if (!localColumn.getColumnType().equals(remoteColumn.getColumnType())) {
+            Boolean isTypeSame = localColumn.getColumnType().equals(remoteColumn.getColumnType());
+            Boolean isStillPrimary = localColumn.isPrimary().equals(remoteColumn.isPrimary());
+            Boolean isStillUnique = localColumn.isUnique().equals(remoteColumn.isUnique());
 
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different type, it should be " + localColumn.getColumnType() + " instead ");
-            // }
-            // if (!localColumn.isPrimary().equals(remoteColumn.isPrimary())) {
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different primary key, it should be " + localColumn.isPrimary() + " instead");
-            // }
-            // if (!localColumn.isUnique().equals(remoteColumn.isUnique())) {
-            //   System.out.println("Column " + remoteColumnName + " in table " + remoteTableName + " has different unique, it should be " + localColumn.isUnique() + " instead");
-            // }
+            if (!isTypeSame || !isStillPrimary || !isStillUnique) {
+              dropColumns.add(remote.get(remoteTableName).getColumns().get(remoteColumnName));
+              System.out.println("\u2713 " + "drop column " + remoteColumnName + " in remote");
+            }
           } else {
             // Column exists in remote but not in local
             // Drop column in remote

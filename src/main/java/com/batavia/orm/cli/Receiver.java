@@ -1,6 +1,6 @@
 package com.batavia.orm.cli;
 
-import com.batavia.orm.comparator.ComparatorMain;
+import com.batavia.orm.comparator.Comparator;
 import com.batavia.orm.reverter.MigrationReverter;
 import com.batavia.orm.runner.MigrationRunner;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -33,11 +33,11 @@ public class Receiver {
         ANSI_RESET +
         "\n"
       );
-      ComparatorMain comparatorMain = new ComparatorMain(
+      Comparator comparator = new Comparator(
         MIGRATIONS_DIR,
         DATASOURCE_DIR
       );
-      comparatorMain.main(stampedFilename);
+      comparator.run(stampedFilename);
       System.out.println(
         "\n" + ANSI_GREEN + "Migration file generated successfully" + ANSI_RESET
       );
