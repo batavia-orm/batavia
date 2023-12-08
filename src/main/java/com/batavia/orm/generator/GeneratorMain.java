@@ -2,7 +2,6 @@ package com.batavia.orm.generator;
 
 import com.batavia.orm.commons.*;
 import com.batavia.orm.generator.sqlScriptGenerators.*;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,25 +44,25 @@ public class GeneratorMain {
   public void runSqlScriptGeneratorToFile(
     SqlCommandContext sqlCommand,
     AlterTableContext alterTableContext
-  ) throws IOException {
+  ) {
     if (sqlCommand == null || alterTableContext == null) {
       System.out.println("SQL command and Alter Table Context cannot be null!");
       return;
     }
 
-    writeUpSqlScript(sqlCommand, alterTableContext);
-    writeDownSqlScript(sqlCommand, alterTableContext);
+    try {
+      writeUpSqlScript(sqlCommand, alterTableContext);
+      writeDownSqlScript(sqlCommand, alterTableContext);
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
-  private void writeToUpMigrationFile(
-      String filePath,
-      String migrationScript) throws IOException {
-    try (
-      BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-      writer.write(migrationScript);
-    } catch (IOException e) {
-      throw new IOException("File path not found!");
-    }
+  private void writeToUpMigrationFile(String filePath, String migrationScript)
+    throws IOException {
+    BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+    writer.write(migrationScript);
+    writer.close();
   }
 
   private void writeUpSqlScript(
@@ -79,21 +78,18 @@ public class GeneratorMain {
   }
 
   private void writeToDownMigrationFile(
-      String filePath,
-      String migrationScript) throws IOException {
-    try {
-        Path path = Paths.get(filePath);
+    String filePath,
+    String migrationScript
+  ) throws IOException {
+    Path path = Paths.get(filePath);
 
-        if (!Files.exists(path)) {
-            Files.createFile(path);
-        }
-
-        String currentFileContent = new String(Files.readAllBytes(path));
-        String newContent = currentFileContent + migrationScript;
-        Files.write(path, newContent.getBytes());
-    } catch (IOException e) {
-        throw new IOException("File path not found!");
+    if (!Files.exists(path)) {
+      Files.createFile(path);
     }
+
+    String currentFileContent = new String(Files.readAllBytes(path));
+    String newContent = currentFileContent + migrationScript;
+    Files.write(path, newContent.getBytes());
   }
 
   private void writeDownSqlScript(
