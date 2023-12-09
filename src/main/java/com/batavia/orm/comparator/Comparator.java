@@ -1,5 +1,6 @@
 package com.batavia.orm.comparator;
 
+import com.batavia.orm.adapters.Config;
 import com.batavia.orm.adapters.Database;
 import com.batavia.orm.commons.Column;
 import com.batavia.orm.commons.Table;
@@ -25,8 +26,9 @@ public class Comparator {
 
   public void run(String migrationFilename) throws SQLException, IOException {
     Database dbInstance = Database.getDatabase();
+    Config configInstance = Config.getConfig();
 
-    DataSourceScanner dataSourceScanner = new DataSourceScanner(datasource_dir);
+    DataSourceScanner dataSourceScanner = new DataSourceScanner(configInstance);
     DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
 
     HashMap<String, Table> databaseTables = databaseScanner.findAllTables();

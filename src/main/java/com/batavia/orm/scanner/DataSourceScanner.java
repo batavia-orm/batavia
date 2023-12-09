@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
 
+import com.batavia.orm.adapters.Config;
 import com.batavia.orm.annotations.Entity;
 import com.batavia.orm.annotations.EntityColumn;
 import com.batavia.orm.annotations.PrimaryColumn;
@@ -23,8 +24,8 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 public class DataSourceScanner {
   private String dataSourcePath;
 
-  public DataSourceScanner(String dataSourcePath) {
-    this.dataSourcePath = dataSourcePath;
+  public DataSourceScanner(Config configInstance) {
+    this.dataSourcePath = configInstance.getDataSourceDir();
   }
 
   public HashMap<String, Table> findAllEntities() throws IOException {
