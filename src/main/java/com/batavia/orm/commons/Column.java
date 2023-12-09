@@ -43,8 +43,4 @@ public class Column {
   public Boolean isUnique() {
     return isUnique;
   }
-
-  public String toString() {
-    return "Column: " + columnName + "--" + columnType + "--" + isPrimaryColumn + "--" + isUnique;
-  }
 }
