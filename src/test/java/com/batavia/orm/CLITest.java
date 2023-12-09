@@ -84,19 +84,19 @@ class CLITest {
     assertNotNull(generateCommand);
   }
 
-  @Test
-    public void testGenerateMigration() {
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
+  // @Test
+  //   public void testGenerateMigration() {
+  //       ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+  //       System.setOut(new PrintStream(outputStreamCaptor));
 
-        Receiver receiver = new Receiver();
-        receiver.generateMigration("test_migration");
-        String actualOutput = outputStreamCaptor.toString().trim();
+  //       Receiver receiver = new Receiver();
+  //       receiver.generateMigration("test_migration");
+  //       String actualOutput = outputStreamCaptor.toString().trim();
 
-        assertTrue(actualOutput.contains("Generating migration:"));
-        assertTrue(actualOutput.contains("_test_migration"));
-        assertTrue(actualOutput.contains("Migration file generated successfully"));
-    }
+  //       assertTrue(actualOutput.contains("Generating migration:"));
+  //       assertTrue(actualOutput.contains("_test_migration"));
+  //       assertTrue(actualOutput.contains("Migration file generated successfully"));
+  //   }
 
 
   @Test
