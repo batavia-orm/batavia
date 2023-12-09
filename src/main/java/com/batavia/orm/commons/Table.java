@@ -22,9 +22,4 @@ public class Table {
   public void addColumn(Column column) {
     this.columns.put(column.getColumnName(), column);
   }
-
-  public int getNumberOfColumns() {
-    return this.columns.size();
-  }
-
 }

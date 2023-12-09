@@ -10,6 +10,9 @@ assignees: ''
 **Product**
 BataviaORM
 
+**Status**
+Pending/Fixed
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -30,6 +33,9 @@ A clear and concise description of what you expected to happen.
  - OS: [e.g. iOS]
  - Java Version [e.g. 19.0.0]
  - Database [e.g. Postgres 15]
+
+**Reporter**
+Name of engineer
 
 **Assigned To:**
 Name of engineer

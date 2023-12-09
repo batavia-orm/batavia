@@ -80,7 +80,7 @@ public class MigrationReverter {
         try (ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
                 boolean exists = resultSet.getBoolean(1);
-                return exists;
+                if (exists) return exists;
             }
         }
         return false;

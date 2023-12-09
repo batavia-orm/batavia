@@ -22,6 +22,7 @@ public class DataBaseScannerTest {
   private Database dbInstance;
   private Column cols;
 
+
   @BeforeEach
   void setUp() throws SQLException {
     resultSet = mock(ResultSet.class);
@@ -42,6 +43,7 @@ public class DataBaseScannerTest {
     when(dbMetadata.getPrimaryKeys(null, null, tableName)).thenReturn(resultSet);
     when(dbMetadata.getColumns(null, null, tableName, null)).thenReturn(resultSet2);
     when(dbMetadata.getTables(null, null, null, new String[] {"TABLE"})).thenReturn(resultSet);
+
     when(resultSet.next()).thenReturn(true).thenReturn(false);
     when(resultSet2.next()).thenReturn(true).thenReturn(false);
     when(dbInstance.getMetadata()).thenReturn(dbMetadata);
@@ -116,6 +118,7 @@ public class DataBaseScannerTest {
     DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
     HashMap<String, Table> hashTables;
     when(resultSet.getString("TABLE_NAME")).thenReturn(tableName);
+
     when(databaseScanner.findPrimaryKey(resultSet)).thenReturn("id");
     // Act
     hashTables = databaseScanner.findTables(resultSet);
@@ -136,5 +139,4 @@ public class DataBaseScannerTest {
     // Assert
     assertEquals(hashTables.get(tableName).getTableName(), "tabName" );
   }
-  
 }
