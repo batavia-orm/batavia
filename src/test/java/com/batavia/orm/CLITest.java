@@ -98,6 +98,8 @@ class CLITest {
         assertTrue(actualOutput.contains("Migration file generated successfully"));
     }
 
+
+  @Test
   void testGenerateMigration1() {
     Receiver mockReceiver = mock(Receiver.class);
     String migrationName = "testMigration";
@@ -136,34 +138,6 @@ class CLITest {
     verify(reader, times(2)).readLine();
     verify(migrateCommand, times(1)).execute();
   }
-
-//   @Test
-//     void testMigrate() {
-//         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-//         System.setOut(new PrintStream(outputStreamCaptor));
-//         Receiver receiver = new Receiver();
-
-//         Connection mockConnection = mock(Connection.class);
-//         MigrationRunner mockMigrationRunner = mock(MigrationRunner.class);
-
-//         try {
-//             when(DriverManager.getConnection(anyString())).thenReturn(mockConnection);
-//             receiver.migrate();
-
-//             String expectedOutputStart = "\nRunning migrations...\n";
-//             String expectedOutputEnd = "\n\n\u001B[32mMigrations applied. Your database is now in sync with your schema\u001B[0m\n";
-//             String actualOutput = outputStreamCaptor.toString().trim();
-
-//             assertTrue(actualOutput.startsWith(expectedOutputStart));
-//             assertTrue(actualOutput.endsWith(expectedOutputEnd));
-
-//             verify(mockMigrationRunner, times(1)).migrate();
-
-//             System.setOut(System.out);
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//         }
-//     }
 
   @Test
   void testRevertCommand() throws IOException {
