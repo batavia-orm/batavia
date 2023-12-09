@@ -133,6 +133,7 @@ java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar generate {
 which will create a time-stamped migration file with the given file name (e.g. `2023-12-01_171223_create_employee_table.sql`)
 
 Both commands will generate time-stamped filenames to maintain file uniqueness and sortedness in the migration folder. The generated files will include the down migration file that will be needed in case of reverts. The content of the migration files will be the necessary SQL statements (automatically generated) to apply the schema changes. Example:
+
 ![Screenshot 2023-12-10 at 3 52 07 AM](https://github.com/batavia-orm/batavia/assets/42536665/e5cd25ab-05bd-4cdd-9933-9c39e1fc0aa5)
 
 #### Migrate
