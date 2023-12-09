@@ -21,7 +21,6 @@ public class DataBaseScannerTest {
   private DatabaseMetaData dbMetadata;
   private Database dbInstance;
   private Column cols;
-  private Table table;
 
   @BeforeEach
   void setUp() throws SQLException {
@@ -30,7 +29,6 @@ public class DataBaseScannerTest {
     dbMetadata = mock(DatabaseMetaData.class);
     dbInstance= mock(Database.class);
     cols = mock(Column.class);
-    table = mock(Table.class);
     String colsName = "name";
     String typeName = "varchar";
     String tableName = "tabName";
@@ -38,14 +36,12 @@ public class DataBaseScannerTest {
     when(cols.getColumnName()).thenReturn("name");
     when(cols.getColumnType()).thenReturn("varchar");
     when(resultSet.getString("COLUMN_NAME")).thenReturn(colsName);
-    when(resultSet.getString("TABLE_NAME")).thenReturn(tableName);
     when(resultSet.getString("TYPE_NAME")).thenReturn(typeName);
     when(resultSet2.getString("COLUMN_NAME")).thenReturn(colsName);
     when(resultSet2.getString("TYPE_NAME")).thenReturn(typeName);
-
-
     when(dbMetadata.getPrimaryKeys(null, null, tableName)).thenReturn(resultSet);
     when(dbMetadata.getColumns(null, null, tableName, null)).thenReturn(resultSet2);
+    when(dbMetadata.getTables(null, null, null, new String[] {"TABLE"})).thenReturn(resultSet);
     when(resultSet.next()).thenReturn(true).thenReturn(false);
     when(resultSet2.next()).thenReturn(true).thenReturn(false);
     when(dbInstance.getMetadata()).thenReturn(dbMetadata);
@@ -105,10 +101,40 @@ public class DataBaseScannerTest {
     String tableName= "tabName";
     DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
     HashMap<String, Table> hashTables;
+    when(resultSet.getString("TABLE_NAME")).thenReturn(tableName);
     when(databaseScanner.findPrimaryKey(resultSet)).thenReturn("id");
     // Act
     hashTables = databaseScanner.findTables(resultSet);
     // Assert
     assertEquals(hashTables.get(tableName).getTableName(), "tabName" );
   }
+
+   @Test
+    public void Should_Correctly_Find_Tables_if_branch() throws SQLException {
+    // Arrange 
+    String tableName= "batavia_migrations";
+    DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
+    HashMap<String, Table> hashTables;
+    when(resultSet.getString("TABLE_NAME")).thenReturn(tableName);
+    when(databaseScanner.findPrimaryKey(resultSet)).thenReturn("id");
+    // Act
+    hashTables = databaseScanner.findTables(resultSet);
+    // Assert
+    assertEquals(hashTables.get(tableName), null);
+  }
+
+  @Test
+    public void Should_Correctly_Find_All_Tables() throws SQLException {
+    // Arrange 
+    String tableName= "tabName";
+    DatabaseScanner databaseScanner = new DatabaseScanner(dbInstance);
+    HashMap<String, Table> hashTables;
+    when(resultSet.getString("TABLE_NAME")).thenReturn(tableName);
+    when(databaseScanner.findPrimaryKey(resultSet)).thenReturn("id");
+    // Act
+    hashTables = databaseScanner.findAllTables();
+    // Assert
+    assertEquals(hashTables.get(tableName).getTableName(), "tabName" );
+  }
+  
 }
