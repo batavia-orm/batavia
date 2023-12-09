@@ -66,3 +66,4 @@ Both command will have a timestamp added to the file name to maintain uniqueness
 `java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar -migrate`: which will execute the migration to the database
 #### Revert
 `java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar -revert`: which will revert the last migration done to the database
+`java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar -revert {file_name}`: which will revert up to the specified migration file
