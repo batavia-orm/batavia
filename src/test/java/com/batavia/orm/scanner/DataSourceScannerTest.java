@@ -1,21 +1,33 @@
 package com.batavia.orm.scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.batavia.orm.adapters.Config;
 import com.batavia.orm.commons.Column;
 import com.batavia.orm.commons.Table;
 
 public class DataSourceScannerTest {
+
+  private Config configInstance;
+
   @TempDir
   private Path testJavaFilesDir;
+
+  @BeforeEach
+  public void setup() throws IOException {
+    configInstance = mock(Config.class);
+  }
 
   @Test
   public void Test_Case_1()
@@ -26,8 +38,9 @@ public class DataSourceScannerTest {
         "@Entity\n" +
         "public class EntityClassA {}";
     Files.write(fileA, contentA.getBytes());
-    
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(1, tables.size());
@@ -49,7 +62,8 @@ public class DataSourceScannerTest {
         "}";
     Files.write(fileA, contentA.getBytes());
     
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(1, tables.size());
@@ -74,7 +88,8 @@ public class DataSourceScannerTest {
         "}";
     Files.write(fileA, contentA.getBytes());
     
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(1, tables.size());
@@ -105,7 +120,8 @@ public class DataSourceScannerTest {
         "}";
     Files.write(fileA, contentA.getBytes());
     
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(1, tables.size());
@@ -135,8 +151,9 @@ public class DataSourceScannerTest {
         "  private Integer fieldA;\n" +
         "}";
     Files.write(fileA, contentA.getBytes());
-    
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(1, tables.size());
@@ -159,7 +176,8 @@ public class DataSourceScannerTest {
     String contentA = "public class EntityClassA {}";
     Files.write(fileA, contentA.getBytes());
     
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    when(configInstance.getDataSourceDir()).thenReturn(testJavaFilesDir.toString());
+    DataSourceScanner scanner = new DataSourceScanner(this.configInstance);
     HashMap<String, Table> tables = scanner.findAllEntities();
 
     assertEquals(0, tables.size());
