@@ -11,9 +11,9 @@ BataviaORM is an innovative lightweight Java-to-SQL ORM (Object-Relational Mappe
 ## Installation
 Install the intended Batavia ORM version from the [release page](https://github.com/batavia-orm/batavia/releases). The installation will include 2 JAR files with the name:
 
-`batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar`
+`batavia-{version_number}-exec.jar` which is the executable JAR file for running the CLI
 
-`batavia-{version_number}-SNAPSHOT.jar` 
+`batavia-{version_number}-package.jar` which is the package JAR file to be imported in your Java project
     
 
 ## Setup
@@ -24,8 +24,8 @@ Add both JAR files to the root directory of your Java project
 │   ├───main
 │   └───test
 └───.env
-└───batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar
-└───batavia-{version_number}-SNAPSHOT.jar
+└───batavia-{version_number}-exec.jar
+└───batavia-{version_number}-package.jar
 └───README.md
 ```
 
@@ -60,7 +60,7 @@ In the eclipse package explorer, right click on your java project and click prop
 
 <img width="229" alt="image" src="https://github.com/batavia-orm/batavia/assets/101443060/589d440f-4cd1-47f6-acea-c416355416f4">
 
-Then, click on the `Java Build Path` tab and choose `Libraries` in the internal tab. Click on `modulepath` then click `Add JARs` and choose the `batavia-{version_number}-SNAPSHOT.jar`. Last, click the `apply and close`.
+Then, click on the `Java Build Path` tab and choose `Libraries` in the internal tab. Click on `modulepath` then click `Add JARs` and choose the `batavia-{version_number}-package.jar`. Last, click the `apply and close`.
 
 <img width="701" alt="image" src="https://github.com/batavia-orm/batavia/assets/101443060/c7167e27-3e3c-44f3-88f3-ae18c9c0d42b">
 
@@ -111,11 +111,11 @@ class Employee {
 ### CLI
 There are 2 ways to run the CLI commands:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar
+java -jar batavia-{version_number}-exec.jar
 ```
 which will run the program in loop mode, accepting and executing the commands, or
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar {COMMAND}
+java -jar batavia-{version_number}-exec.jar {COMMAND}
 ```
 which will directly execute the inputted command. The commands include the following:
 
@@ -124,11 +124,11 @@ which will directly execute the inputted command. The commands include the follo
 
 Once you have made the changes to your Java schema/classes and are ready to capture the changes and generate the migration, there are 2 ways to run the generate command:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar generate
+java -jar batavia-{version_number}-exec.jar generate
 ```
 which will create a migration file with a time-stamped auto-generated file name (e.g. `2023-12-01_171223_automatic.sql`), or
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar generate {file_name}
+java -jar batavia-{version_number}-exec.jar generate {file_name}
 ```
 which will create a time-stamped migration file with the given file name (e.g. `2023-12-01_171223_create_employee_table.sql`)
 
@@ -141,7 +141,7 @@ Both commands will generate time-stamped filenames to maintain file uniqueness a
 
 Once the migration files are generated and you are ready to run the migration against the database, you can run the following:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar migrate
+java -jar batavia-{version_number}-exec.jar migrate
 ```
 which will execute the migration and apply the schema changes to the remote database
 
@@ -150,11 +150,11 @@ which will execute the migration and apply the schema changes to the remote data
 
 If you intend to rollback / undo any changes applied by your previous migration(s) to the remote database, you can revert the migrations through the following commands:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar revert
+java -jar batavia-{version_number}-exec.jar revert
 ```
 which will revert the last migration applied to the database, you can also do:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar revert {previous_migration_filename}
+java -jar batavia-{version_number}-exec.jar revert {previous_migration_filename}
 ```
 which will return the database schema state back to the specified migration by reverting all migrations up to the specified `previous_migration_filename`.
 Say, for instance, the migrations folder in your app is something like below with migration `0012_latest_migration.sql` being applied the most recently.
@@ -165,7 +165,14 @@ Say, for instance, the migrations folder in your app is something like below wit
 ```
 If you want to go back to `0010_previous_migration.sql`, you can run the following:
 ```
-java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar revert 0010_previous_migration.sql
+java -jar batavia-{version_number}-exec.jar revert 0010_previous_migration.sql
 ```
 The reverter will then revert `0012_latest_migration.sql` by executing `0012_latest_migration.down.sql` against the database, and subsequently reverting `0011_next_migration.sql` the same way. You can then delete the local files of the migrations that got reverted if you'd like to further generate a different migration to ensure migration consistency.
 
+## Acknowledgements
+We express gratitude to our amazing brilliant team, comprising the following members:
+- Vannes Wijaya, as Project Manager, who mainly built our Migration Runner & Migration Reverter
+- Enryl Einhard, as Software Engineer, who mainly built our Comparator & Datasource Scanner
+- Dannel Mulja, as Software Engineer, who mainly built our Comparator & Database Scanner
+- Alvin Thosatria, as Software Engineer, who mainly built our Script Generator
+- Cindy Falencia Irawan, as Software Engiener, who mainly built the CLI / interface of our app
