@@ -113,7 +113,6 @@ class CLITest {
     verify(migrateCommand, times(1)).execute();
   }
 
-
   @Test
   void testRevertCommand() throws IOException {
     Command revertCommand = mock(Command.class);
