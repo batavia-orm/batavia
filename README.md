@@ -120,6 +120,8 @@ java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar {COMMAND}
 which will directly execute the inputted command. The commands include the following:
 
 #### Generate
+![Screenshot 2023-12-10 at 3 50 23 AM](https://github.com/batavia-orm/batavia/assets/42536665/afe00a6d-1151-4c20-9193-ce462c4582c8)
+
 Once you have made the changes to your Java schema/classes and are ready to capture the changes and generate the migration, there are 2 ways to run the generate command:
 ```
 java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar generate
@@ -130,9 +132,12 @@ java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar generate {
 ```
 which will create a time-stamped migration file with the given file name (e.g. `2023-12-01_171223_create_employee_table.sql`)
 
-Both commands will generate time-stamped filenames to maintain file uniqueness and sortedness in the migration folder. The generated files will include the down migration file that will be needed in case of reverts.
+Both commands will generate time-stamped filenames to maintain file uniqueness and sortedness in the migration folder. The generated files will include the down migration file that will be needed in case of reverts. The content of the migration files will be the necessary SQL statements (automatically generated) to apply the schema changes. Example:
+![Screenshot 2023-12-10 at 3 52 07 AM](https://github.com/batavia-orm/batavia/assets/42536665/e5cd25ab-05bd-4cdd-9933-9c39e1fc0aa5)
 
 #### Migrate
+![Screenshot 2023-12-10 at 3 58 24 AM](https://github.com/batavia-orm/batavia/assets/42536665/6626aad4-4ad5-4025-8043-0407224209ad)
+
 Once the migration files are generated and you are ready to run the migration against the database, you can run the following:
 ```
 java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar migrate
@@ -140,6 +145,8 @@ java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar migrate
 which will execute the migration and apply the schema changes to the remote database
 
 #### Revert
+![Screenshot 2023-12-10 at 4 00 14 AM](https://github.com/batavia-orm/batavia/assets/42536665/4c130209-25be-45b4-8ee7-4959d709ee6b)
+
 If you intend to rollback / undo any changes applied by your previous migration(s) to the remote database, you can revert the migrations through the following commands:
 ```
 java -jar batavia-{version_number}-SNAPSHOT-jar-with-dependencies.jar revert
