@@ -25,6 +25,7 @@ public class Comparator {
   }
 
   public void run(String migrationFilename) throws SQLException, IOException {
+    // workaround until config & db can be passed to the params
     Database dbInstance = Database.getDatabase();
     Config configInstance = Config.getConfig();
 
