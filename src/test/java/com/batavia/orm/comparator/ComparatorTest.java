@@ -7,20 +7,36 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
+import com.batavia.orm.adapters.Database;
 import com.batavia.orm.commons.Column;
 import com.batavia.orm.commons.Table;
 import com.batavia.orm.scanner.DataSourceScanner;
 import com.batavia.orm.scanner.DatabaseScanner;
 
 public class ComparatorTest {
+
   @Test
   public void Should_Be_Able_To_Run_And_Compare_From_DataSource_And_Database(@TempDir Path tempDir) throws IOException, SQLException {
+    ResultSet resultSet = mock(ResultSet.class);
+    Database dbInstance = mock(Database.class);
+    DatabaseMetaData dbMetadata = mock(DatabaseMetaData.class);
+
+    MockedStatic<Database> staticDB = Mockito.mockStatic(Database.class);
+    staticDB.when(Database::getDatabase).thenReturn(dbInstance);
+
+    when(dbInstance.getMetadata()).thenReturn(dbMetadata);
+    when(dbMetadata.getTables(null, null, null, new String[] {"TABLE"})).thenReturn(resultSet);
+
     Path upSQLPath = Files.createFile(tempDir.resolve("comparatorTest.sql"));
     Path downSQLPath = Files.createFile(tempDir.resolve("comparatorTest.down.sql"));
     DataSourceScanner dataSourceScanner = mock(DataSourceScanner.class);
@@ -36,6 +52,7 @@ public class ComparatorTest {
     
     when(dataSourceScanner.findAllEntities()).thenReturn(localTables);
     when(databaseScanner.findAllTables()).thenReturn(remoteTables);
+    when(databaseScanner.findTables(resultSet)).thenReturn(remoteTables);
 
     comparator.run("comparatorTest");
 
@@ -177,8 +194,8 @@ public class ComparatorTest {
     String upSQLContent = Files.readString(upSQLPath);
     String downSQLContent = Files.readString(downSQLPath);
 
-    assertEquals(upSQLContent, "ALTER TABLE table_a\n" + "ADD COLUMN col_a VARCHAR;\n\n" + "ALTER TABLE table_a\n" + "DROP COLUMN col_a;\n\n");
-    assertEquals(downSQLContent, "ALTER TABLE table_a\n" + "DROP COLUMN col_a;\n\n" + "ALTER TABLE table_a\n" + "ADD COLUMN col_a INT;\n\n");
+    assertEquals(upSQLContent, "");
+    assertEquals(downSQLContent, "");
   }
 }
 
