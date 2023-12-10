@@ -32,7 +32,9 @@ Add both JAR files to the root directory of your Java project
 ### Set environment variables
 In the .env file, set 3 necessary variables
 
-- `DATABASE_URL`: the full JDBC Database URL (connection string). Format: `jdbc:postgresql://host:port/database?properties`
+- `DATABASE_URL`: the full JDBC Database URL (connection string).
+
+    Format: `jdbc:postgresql://host:port/database?properties`
 - `MIGRATIONS_DIR`: the path to the migration directory
 - `DATASOURCE_DIR`: the path to your Java schema/classes directory
   
