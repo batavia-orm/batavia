@@ -175,4 +175,4 @@ We express gratitude to our amazing brilliant team, comprising the following mem
 - Enryl Einhard, as Software Engineer, who mainly built our Comparator & Datasource Scanner
 - Dannel Mulja, as Software Engineer, who mainly built our Comparator & Database Scanner
 - Alvin Thosatria, as Software Engineer, who mainly built our Script Generator
-- Cindy Falencia Irawan, as Software Engiener, who mainly built the CLI / interface of our app
+- Cindy Falencia Irawan, as Software Engineer, who mainly built the CLI / interface of our app
