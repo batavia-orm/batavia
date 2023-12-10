@@ -3,9 +3,20 @@
 
 BataviaORM is an innovative lightweight Java-to-SQL ORM (Object-Relational Mapper) framework, designed to revolutionize the way developers interact with databases. BataviaORM embraces a minimalist design philosophy, allowing developers to seamlessly map Java classes to SQL tables with minimal setup and configuration, and apply database schema changes without writing a single SQL code yourself. It includes 3 core functionalities; migration generator, migration runner, migration reverter.
 
+- [Product Demo](#installation)
 - [Installation](#installation)
 - [Setup](#setup)
 - [Usage](#usage)
+
+
+## Product Demo
+### Part 1: 
+
+https://www.loom.com/share/69d60ff82224406fae9dab4c1d94b477?sid=074c83a8-25c6-4624-bdcb-875f8ea509bc
+
+### Part 2: 
+
+https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4de2-b02a-8b4c1a793296
 
 
 ## Installation
