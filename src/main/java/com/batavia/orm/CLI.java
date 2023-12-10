@@ -11,16 +11,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class CLI {
-
+  private static final Dotenv dotenv = Dotenv.load();
   private BufferedReader reader;
   private Map<String, Command> commandMap = new HashMap<>();
-
-  private GenerateMigrationCommand generateMigrationCommand;
-  private MigrateCommand migrateCommand;
-  private RevertCommand revertCommand;
-  private ShowMigrationsCommand showMigrationsCommand;
+  private Command command;
 
   public CLI(BufferedReader reader, Map<String, Command> commandMap) {
     this.reader = reader;
@@ -31,21 +28,14 @@ public class CLI {
     this.reader = reader;
 
     // Create a receiver
+    // Receiver receiver = new Receiver(dotenv.get("MIGRATIONS_DIR"));
     Receiver receiver = new Receiver();
 
-    // Initialize commands
-    this.generateMigrationCommand =
-      new GenerateMigrationCommand(receiver, "automatic");
-    this.migrateCommand = new MigrateCommand(receiver);
-    this.revertCommand =
-      new RevertCommand(receiver, "previous-migration-filename");
-    this.showMigrationsCommand = new ShowMigrationsCommand(receiver);
-
     // Put all the commands in the hashmap
-    commandMap.put("generate", this.generateMigrationCommand);
-    commandMap.put("migrate", this.migrateCommand);
-    commandMap.put("revert", this.revertCommand);
-    commandMap.put("show", this.showMigrationsCommand);
+    commandMap.put("generate", new GenerateMigrationCommand(receiver, "automatic"));
+    commandMap.put("migrate", new MigrateCommand(receiver));
+    commandMap.put("revert", new RevertCommand(receiver, "previous-migration-filename"));
+    commandMap.put("show", new ShowMigrationsCommand(receiver));
   }
 
   public void startCLI() {
@@ -62,12 +52,14 @@ public class CLI {
         ) {
           System.out.println("Exiting...");
           break;
+        } else if(userInput.equalsIgnoreCase("help")){
+          printUsage();
         }
 
         String[] args = userInput.split("\\s+");
 
-        Command command = parseCommand(args);
-
+        command = commandMap.get(userInput);
+        
         if (command != null) {
           command.execute();
         } else {
@@ -80,18 +72,6 @@ public class CLI {
         continueRunning = false;
       }
     }
-  }
-
-  private Command parseCommand(String[] args) {
-    String commandName = args[0].toLowerCase();
-    Command command = commandMap.get(commandName);
-
-    if (command == null) {
-      System.out.println("Unknown command: " + commandName);
-      printUsage();
-    }
-
-    return command;
   }
 
   private void printUsage() {
