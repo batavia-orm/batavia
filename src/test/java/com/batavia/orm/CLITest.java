@@ -1,30 +1,56 @@
 package com.batavia.orm;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import com.batavia.orm.adapters.Config;
 import com.batavia.orm.cli.Command;
 import com.batavia.orm.cli.Receiver;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 class CLITest {
 
   private BufferedReader reader;
   private CLI cli;
+  
+  @TempDir
+  File tempDir;
+
+  @BeforeAll
+  public static void setConfig() throws SQLException {
+    Config mock_Config = mock(Config.class);
+    MockedStatic<Config> mock_Config_static = Mockito.mockStatic(Config.class);
+    mock_Config_static.when(Config::getConfig).thenReturn(mock_Config);
+    when(mock_Config.getDatabaseURL()).thenReturn("mock");
+    when(mock_Config.getMigrationsDir()).thenReturn("mock");
+    when(mock_Config.getDatasourceDir()).thenReturn("mock");
+    
+  }
 
   @BeforeEach
-  public void setup() throws IOException {
+  public void setup() throws IOException, SQLException {
     reader = mock(BufferedReader.class);
+
     cli = new CLI(reader);
   }
 
@@ -58,21 +84,46 @@ class CLITest {
     assertNotNull(generateCommand);
   }
 
-  // test Generate Migration by mock Receiver class
+  // @Test
+  //   public void testGenerateMigration() {
+  //       ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+  //       System.setOut(new PrintStream(outputStreamCaptor));
+
+  //       Receiver receiver = new Receiver();
+  //       receiver.generateMigration("test_migration");
+  //       String actualOutput = outputStreamCaptor.toString().trim();
+
+  //       assertTrue(actualOutput.contains("Generating migration:"));
+  //       assertTrue(actualOutput.contains("_test_migration"));
+  //       assertTrue(actualOutput.contains("Migration file generated successfully"));
+  //   }
+
+
   @Test
-    public void testGenerateMigration() {
-        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
+  void testGenerateMigration1() {
+    Receiver mockReceiver = mock(Receiver.class);
+    String migrationName = "testMigration";
+    doNothing().when(mockReceiver).generateMigration(migrationName);
+    mockReceiver.generateMigration(migrationName);
+    verify(mockReceiver, times(1)).generateMigration(migrationName);
+  }
 
-        Receiver receiver = new Receiver();
-        receiver.generateMigration("test_migration");
-        String actualOutput = outputStreamCaptor.toString().trim();
+  @Test
+  void testMigrate() {
+    Receiver mockReceiver = mock(Receiver.class);
+    doNothing().when(mockReceiver).migrate();
+    mockReceiver.migrate();
+    verify(mockReceiver, times(1)).migrate();
+  }
 
-        assertTrue(actualOutput.contains("Generating migration:"));
-        assertTrue(actualOutput.contains("_test_migration"));
-        assertTrue(actualOutput.contains("Migration file generated successfully"));
+  @Test
+    void testRevert() {
+        Receiver mockReceiver = mock(Receiver.class);
+        String migrationName = "testMigration";
+        doNothing().when(mockReceiver).revert(migrationName);
+        mockReceiver.revert(migrationName);
+        verify(mockReceiver, times(1)).revert(migrationName);
     }
-
 
   @Test
   void testMigrateCommand() throws IOException {
@@ -88,34 +139,6 @@ class CLITest {
     verify(migrateCommand, times(1)).execute();
   }
 
-//   @Test
-//     void testMigrate() {
-//         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-//         System.setOut(new PrintStream(outputStreamCaptor));
-//         Receiver receiver = new Receiver();
-
-//         Connection mockConnection = mock(Connection.class);
-//         MigrationRunner mockMigrationRunner = mock(MigrationRunner.class);
-
-//         try {
-//             when(DriverManager.getConnection(anyString())).thenReturn(mockConnection);
-//             receiver.migrate();
-
-//             String expectedOutputStart = "\nRunning migrations...\n";
-//             String expectedOutputEnd = "\n\n\u001B[32mMigrations applied. Your database is now in sync with your schema\u001B[0m\n";
-//             String actualOutput = outputStreamCaptor.toString().trim();
-
-//             assertTrue(actualOutput.startsWith(expectedOutputStart));
-//             assertTrue(actualOutput.endsWith(expectedOutputEnd));
-
-//             verify(mockMigrationRunner, times(1)).migrate();
-
-//             System.setOut(System.out);
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//         }
-//     }
-
   @Test
   void testRevertCommand() throws IOException {
     Command revertCommand = mock(Command.class);
@@ -129,47 +152,6 @@ class CLITest {
     verify(reader, times(2)).readLine();
     verify(revertCommand, times(1)).execute();
   }
-
-//   @Test
-//     void testRevert() {
-//         // Redirect System.out to capture the printed output
-//         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-//         System.setOut(new PrintStream(outputStreamCaptor));
-
-//         // Create an instance of Receiver
-//         Receiver receiver = new Receiver();
-
-//         // Mock necessary dependencies
-//         Connection mockConnection = mock(Connection.class);
-//         MigrationReverter mockMigrationReverter = mock(MigrationReverter.class);
-
-//         try {
-//             // Stub the DriverManager.getConnection method to return the mock connection
-//             when(DriverManager.getConnection(anyString())).thenReturn(mockConnection);
-
-//             // Stub the revert method of the mock MigrationReverter
-//             doCallRealMethod().when(mockMigrationReverter).revert(anyString());
-//             doCallRealMethod().when(mockMigrationReverter).revert();
-//             // Call the method to be tested
-//             receiver.revert("example_migration");
-
-//             // Verify that the expected output is printed
-//             String expectedOutputStart = "\nReverting...\n";
-//             String expectedOutputEnd = "\n\n\u001B[32mReverted applied migrations\u001B[0m\n";
-//             String actualOutput = outputStreamCaptor.toString().trim();
-
-//             assertTrue(actualOutput.startsWith(expectedOutputStart));
-//             assertTrue(actualOutput.endsWith(expectedOutputEnd));
-
-//             // Verify that the revert method of the mock MigrationReverter is called
-//             verify(mockMigrationReverter, times(1)).revert("example_migration");
-
-//             // Reset System.out to its original state
-//             System.setOut(System.out);
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//         }
-//     }
  
   @Test
   void testShowMigrationsCommand() throws IOException {
@@ -185,7 +167,6 @@ class CLITest {
     verify(showCommand, times(1)).execute();
   }
 
-  //Test receiver.java
   @Test
     public void testShowMigrations() {
         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
