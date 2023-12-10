@@ -128,6 +128,19 @@ public class DataSourceScannerTest {
     assertEquals(true, fieldA.isUnique());
   }
 
+   @Test
+  public void Should_Correctly_Differentiate_Class_That_Are_Not_Entity_Annotated()
+      throws IOException {
+    Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
+    String contentA = "public class EntityClassA {}";
+    Files.write(fileA, contentA.getBytes());
+    
+    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    HashMap<String, Table> tables = scanner.findAllEntities();
+
+    assertEquals(0, tables.size());
+  }
+
   @Test
   public void Should_Correctly_Differentiate_Columns_That_Are_Not_ColumnEntity_Annotated()
       throws IOException {
@@ -150,18 +163,5 @@ public class DataSourceScannerTest {
     assertEquals("entity_class_a", entityA.getTableName());
 
     assertEquals(0, entityA.getColumns().size());
-  }
-
-  @Test
-  public void Should_Correctly_Differentiate_Class_That_Are_Not_Entity_Annotated()
-      throws IOException {
-    Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
-    String contentA = "public class EntityClassA {}";
-    Files.write(fileA, contentA.getBytes());
-    
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
-    HashMap<String, Table> tables = scanner.findAllEntities();
-
-    assertEquals(0, tables.size());
   }
 }
