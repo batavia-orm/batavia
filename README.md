@@ -9,7 +9,7 @@ BataviaORM is an innovative lightweight Java-to-SQL ORM (Object-Relational Mappe
 
 
 ## Installation
-Install the intended Batavia ORM version from the [release page](https://github.com/batavia-orm/batavia/releases). The installation will include 2 JAR files with the name:
+Install the intended Batavia ORM version from the [release page](https://github.com/batavia-orm/batavia/releases) (release summary on the bottom of this README). The installation will include 2 JAR files with the name:
 
 `batavia-{version_number}-exec.jar` which is the executable JAR file for running the CLI
 
@@ -178,3 +178,22 @@ We express gratitude to our amazing brilliant team, comprising the following mem
 - Dannel Mulja, as Software Engineer, who mainly built our Comparator & Database Scanner
 - Alvin Thosatria, as Software Engineer, who mainly built our Script Generator
 - Cindy Falencia Irawan, as Software Engineer, who mainly built the CLI / interface of our app
+
+## Release Summary
+| Release | Date       |
+|---------|------------|
+| Beta    | 20/11/2023 |
+| 1.0     | 09/12/2023 |
+| 1.1     | 10/12/2023 |
+
+### LTS release (1.1) (recommended version)
+What's new :
+- New colorful CLI UI
+- Support for primary column annotations
+- Revert with `{previous_migration_filename}` feature
+- Type changes are now reflected in migration files
+
+Bug fixes :
+- Fixed revert migration FileNotFound error
+- Resolved java.lang.NoClassDefFoundError when running .jar file
+- Addressed Java to SQL data type mapping issue
