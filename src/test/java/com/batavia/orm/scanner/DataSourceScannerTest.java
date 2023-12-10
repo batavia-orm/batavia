@@ -18,7 +18,7 @@ public class DataSourceScannerTest {
   private Path testJavaFilesDir;
 
   @Test
-  public void Test_Case_1()
+  public void Should_Be_Able_To_Scan_Entity_Annotated_Class()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -35,33 +35,9 @@ public class DataSourceScannerTest {
     Table entityA = tables.get("entity_class_a");
     assertEquals("entity_class_a", entityA.getTableName());
   }
-  
-  @Test
-  public void Test_Case_2()
-      throws IOException {
-    Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
-    String contentA = "import com.batavia.orm.annotations.Entity;\n" +
-        "import com.batavia.orm.annotations.EntityColumn;\n" + 
-        "\n" +
-        "@Entity\n" +
-        "public class EntityClassA {\n" +
-        "  private String fieldA;\n" +
-        "}";
-    Files.write(fileA, contentA.getBytes());
-    
-    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
-    HashMap<String, Table> tables = scanner.findAllEntities();
-
-    assertEquals(1, tables.size());
-
-    Table entityA = tables.get("entity_class_a");
-    assertEquals("entity_class_a", entityA.getTableName());
-
-    assertEquals(0, entityA.getColumns().size());
-  }
 
   @Test
-  public void Test_Case_3()
+  public void Should_Be_Able_To_Scan_ColumnEntity_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -89,9 +65,9 @@ public class DataSourceScannerTest {
     assertEquals(false, fieldA.isPrimary());
     assertEquals(false, fieldA.isUnique());
   }
-
+  
   @Test
-  public void Test_Case_4()
+  public void Should_Be_Able_To_Scan_PrimaryColumn_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -122,7 +98,7 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Test_Case_5()
+  public void Should_Be_Able_To_Scan_Unique_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -153,7 +129,31 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Test_Case_6()
+  public void Should_Be_Able_To_Differentiate_Columns_That_Are_Not_ColumnEntity_Annotated()
+      throws IOException {
+    Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
+    String contentA = "import com.batavia.orm.annotations.Entity;\n" +
+        "import com.batavia.orm.annotations.EntityColumn;\n" + 
+        "\n" +
+        "@Entity\n" +
+        "public class EntityClassA {\n" +
+        "  private String fieldA;\n" +
+        "}";
+    Files.write(fileA, contentA.getBytes());
+    
+    DataSourceScanner scanner = new DataSourceScanner(testJavaFilesDir.toString());
+    HashMap<String, Table> tables = scanner.findAllEntities();
+
+    assertEquals(1, tables.size());
+
+    Table entityA = tables.get("entity_class_a");
+    assertEquals("entity_class_a", entityA.getTableName());
+
+    assertEquals(0, entityA.getColumns().size());
+  }
+
+  @Test
+  public void Should_Be_Able_To_Differentiate_Class_That_Are_Not_Entity_Annotated()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "public class EntityClassA {}";
