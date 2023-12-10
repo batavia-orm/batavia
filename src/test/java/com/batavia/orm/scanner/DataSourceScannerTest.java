@@ -18,7 +18,7 @@ public class DataSourceScannerTest {
   private Path testJavaFilesDir;
 
   @Test
-  public void Should_Be_Able_To_Scan_Entity_Annotated_Class()
+  public void Should_Correctly_Scan_Entity_Annotated_Class()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -37,7 +37,7 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Should_Be_Able_To_Scan_ColumnEntity_Annotated_Fields()
+  public void Should_Correctly_Scan_ColumnEntity_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -65,9 +65,9 @@ public class DataSourceScannerTest {
     assertEquals(false, fieldA.isPrimary());
     assertEquals(false, fieldA.isUnique());
   }
-  
+
   @Test
-  public void Should_Be_Able_To_Scan_PrimaryColumn_Annotated_Fields()
+  public void Should_Correctly_Scan_PrimaryColumn_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -98,7 +98,7 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Should_Be_Able_To_Scan_Unique_Annotated_Fields()
+  public void Should_Correctly_Scan_Unique_Annotated_Fields()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -129,7 +129,7 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Should_Be_Able_To_Differentiate_Columns_That_Are_Not_ColumnEntity_Annotated()
+  public void Should_Correctly_Differentiate_Columns_That_Are_Not_ColumnEntity_Annotated()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "import com.batavia.orm.annotations.Entity;\n" +
@@ -153,7 +153,7 @@ public class DataSourceScannerTest {
   }
 
   @Test
-  public void Should_Be_Able_To_Differentiate_Class_That_Are_Not_Entity_Annotated()
+  public void Should_Correctly_Differentiate_Class_That_Are_Not_Entity_Annotated()
       throws IOException {
     Path fileA = testJavaFilesDir.resolve("EntityClassA.java");
     String contentA = "public class EntityClassA {}";
