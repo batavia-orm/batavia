@@ -1,5 +1,7 @@
 package com.batavia.orm.cli;
 
+import com.batavia.orm.adapters.Config;
+import com.batavia.orm.adapters.Database;
 import com.batavia.orm.comparator.Comparator;
 import com.batavia.orm.reverter.MigrationReverter;
 import com.batavia.orm.runner.MigrationRunner;
@@ -13,10 +15,11 @@ import java.time.format.DateTimeFormatter;
 
 public class Receiver {
 
-  private static final Dotenv dotenv = Dotenv.load();
-  private static final String DATASOURCE_DIR = dotenv.get("DATASOURCE_DIR");
-  private static final String MIGRATIONS_DIR = dotenv.get("MIGRATIONS_DIR");
-  private static final String DATABASE_URL = dotenv.get("DATABASE_URL");
+  private Config bataviaConfig = Config.getConfig();
+  private String DATASOURCE_DIR = bataviaConfig.getDatasourceDir();
+  private String MIGRATIONS_DIR = bataviaConfig.getMigrationsDir();
+  private String DATABASE_URL = bataviaConfig.getDatabaseURL();
+  private Database database = Database.getDatabase();
   private String migrationToRevertTo = null;
 
   public void generateMigration(String migrationFilename) {
@@ -61,7 +64,7 @@ public class Receiver {
     String ANSI_RESET = "\u001B[0m";
     String ANSI_GREEN = "\u001B[32m";
 
-    try (Connection connection = DriverManager.getConnection(DATABASE_URL);) {
+    try (Connection connection = database.getConnection();) {
       MigrationRunner migrationRunner = new MigrationRunner(
         MIGRATIONS_DIR,
         connection
@@ -83,7 +86,7 @@ public class Receiver {
     String ANSI_RESET = "\u001B[0m";
     String ANSI_GREEN = "\u001B[32m";
 
-    try (Connection connection = DriverManager.getConnection(DATABASE_URL);) {
+    try (Connection connection = database.getConnection();) {
       MigrationReverter migrationReverter = new MigrationReverter(
         MIGRATIONS_DIR,
         connection
