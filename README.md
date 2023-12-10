@@ -20,7 +20,7 @@ https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4d
 
 
 ## Installation
-Install the intended Batavia ORM version from the [release page](https://github.com/batavia-orm/batavia/releases) (release summary on the bottom of this README). The installation will include 2 JAR files with the name:
+Install the intended Batavia ORM version JAR files from the `releases` folder in this repository or the [release page](https://github.com/batavia-orm/batavia/releases) (release summary on the bottom of this README). The installation will include 2 JAR files with the name:
 
 `batavia-{version_number}-exec.jar` which is the executable JAR file for running the CLI
 
