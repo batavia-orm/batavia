@@ -39,42 +39,62 @@ public class MigrationRunnerTest {
         migrationRunner.migrate();
 
         verify(statement).executeUpdate("CREATE TABLE batavia_migrations (id SERIAL PRIMARY KEY, migration_file VARCHAR(255))");
-        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration1.sql')");
-        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration2.sql')");
-        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration1.down.sql')");
-        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration2.down.sql')");
-        verify(statement).execute("migration1-content");
-        verify(statement).execute("migration2-content");
-        verify(statement, never()).execute("migration1-down-content");
-        verify(statement, never()).execute("migration2-down-content");
+        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.sql')");
+        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.down.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.down.sql')");
+        verify(statement).execute("a-content");
+        verify(statement).execute("b-content");
+        verify(statement, never()).execute("a-down-content");
+        verify(statement, never()).execute("b-down-content");
         verify(statement, times(1)).close();
     }
 
     @Test
-    void migrate_WhenMigrationsTableExists_ShouldOnlyExecuteUnappliedMigrations() throws SQLException {
+    void migrate_WhenMigrationsTableExists_ShouldExecuteUnappliedMigrations() throws SQLException {
         when(resultSet.getBoolean(1)).thenReturn(true);
 
-        when(resultSet.getInt(1)).thenReturn(0).thenReturn(1);
+        when(resultSet.getInt(1)).thenReturn(0).thenReturn(0);
 
         migrationRunner.migrate();
 
         verify(statement, never()).executeUpdate("CREATE TABLE batavia_migrations (id SERIAL PRIMARY KEY, migration_file VARCHAR(255))");
-        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration1.sql')");
-        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration1.down.sql')");
-        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration2.down.sql')");
-        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('migration2.sql')");
-        verify(statement, never()).execute("migration1-content");
-        verify(statement, never()).execute("migration1-down-content");
-        verify(statement, never()).execute("migration2-down-content");
-        verify(statement).execute("migration2-content");
+        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.down.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.down.sql')");
+        verify(statement).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.sql')");
+        verify(statement).execute("a-content");
+        verify(statement, never()).execute("a-down-content");
+        verify(statement, never()).execute("b-down-content");
+        verify(statement).execute("b-content");
+        verify(statement, times(1)).close();
+    }
+
+    @Test
+    void migrate_WhenMigrationsTableExists_ShouldNotExecuteAppliedMigrations() throws SQLException {
+        when(resultSet.getBoolean(1)).thenReturn(true);
+
+        when(resultSet.getInt(1)).thenReturn(1).thenReturn(1);
+
+        migrationRunner.migrate();
+
+        verify(statement, never()).executeUpdate("CREATE TABLE batavia_migrations (id SERIAL PRIMARY KEY, migration_file VARCHAR(255))");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('a.down.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.down.sql')");
+        verify(statement, never()).executeUpdate("INSERT INTO batavia_migrations (migration_file) VALUES ('b.sql')");
+        verify(statement, never()).execute("a-content");
+        verify(statement, never()).execute("a-down-content");
+        verify(statement, never()).execute("b-down-content");
+        verify(statement, never()).execute("b-content");
         verify(statement, times(1)).close();
     }
 
     private void createMultipleMockMigrationFiles() throws IOException {
-        createMockMigrationFile("migration1.sql", "migration1-content");
-        createMockMigrationFile("migration1.down.sql", "migration1-down-content");
-        createMockMigrationFile("migration2.sql", "migration2-content");
-        createMockMigrationFile("migration2.down.sql", "migration2-down-content");
+        createMockMigrationFile("a.sql", "a-content");
+        createMockMigrationFile("a.down.sql", "a-down-content");
+        createMockMigrationFile("b.sql", "b-content");
+        createMockMigrationFile("b.down.sql", "b-down-content");
     }
 
     private File createMockMigrationFile(String fileName, String content) throws IOException {
