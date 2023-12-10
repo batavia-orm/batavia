@@ -19,16 +19,6 @@ BataviaORM is an innovative lightweight Java-to-SQL ORM (Object-Relational Mappe
 
 [https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4de2-b02a-8b4c1a793296](https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4de2-b02a-8b4c1a793296)
 
-## Product Demo
-
-### Part 1:
-
-https://www.loom.com/share/69d60ff82224406fae9dab4c1d94b477?sid=074c83a8-25c6-4624-bdcb-875f8ea509bc
-
-### Part 2:
-
-https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4de2-b02a-8b4c1a793296
-
 ## Installation
 
 Install the intended Batavia ORM version JAR files from the `releases` folder in this repository or the [release page](https://github.com/batavia-orm/batavia/releases) (release summary on the bottom of this README). The installation will include 2 JAR files with the name:
