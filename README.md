@@ -3,13 +3,24 @@
 
 BataviaORM is an innovative lightweight Java-to-SQL ORM (Object-Relational Mapper) framework, designed to revolutionize the way developers interact with databases. BataviaORM embraces a minimalist design philosophy, allowing developers to seamlessly map Java classes to SQL tables with minimal setup and configuration, and apply database schema changes without writing a single SQL code yourself. It includes 3 core functionalities; migration generator, migration runner, migration reverter.
 
+- [Product Demo](#installation)
 - [Installation](#installation)
 - [Setup](#setup)
 - [Usage](#usage)
 
 
+## Product Demo
+### Part 1: 
+
+https://www.loom.com/share/69d60ff82224406fae9dab4c1d94b477?sid=074c83a8-25c6-4624-bdcb-875f8ea509bc
+
+### Part 2: 
+
+https://www.loom.com/share/13db5e2e4e784e778e1e6c12bcbe4dd0?sid=be6ec119-64a1-4de2-b02a-8b4c1a793296
+
+
 ## Installation
-Install the intended Batavia ORM version from the [release page](https://github.com/batavia-orm/batavia/releases). The installation will include 2 JAR files with the name:
+Install the intended Batavia ORM version JAR files from the `releases` folder in this repository or the [release page](https://github.com/batavia-orm/batavia/releases) (release summary on the bottom of this README). The installation will include 2 JAR files with the name:
 
 `batavia-{version_number}-exec.jar` which is the executable JAR file for running the CLI
 
@@ -32,7 +43,9 @@ Add both JAR files to the root directory of your Java project
 ### Set environment variables
 In the .env file, set 3 necessary variables
 
-- `DATABASE_URL`: the full JDBC Database URL (connection string). Format: `jdbc:postgresql://host:port/database?properties`
+- `DATABASE_URL`: the full JDBC Database URL (connection string).
+
+    Format: `jdbc:postgresql://host:port/database?properties`
 - `MIGRATIONS_DIR`: the path to the migration directory
 - `DATASOURCE_DIR`: the path to your Java schema/classes directory
   
@@ -175,4 +188,23 @@ We express gratitude to our amazing brilliant team, comprising the following mem
 - Enryl Einhard, as Software Engineer, who mainly built our Comparator & Datasource Scanner
 - Dannel Mulja, as Software Engineer, who mainly built our Comparator & Database Scanner
 - Alvin Thosatria, as Software Engineer, who mainly built our Script Generator
-- Cindy Falencia Irawan, as Software Engiener, who mainly built the CLI / interface of our app
+- Cindy Falencia Irawan, as Software Engineer, who mainly built the CLI / interface of our app
+
+## Release Summary
+| Release | Date       |
+|---------|------------|
+| Beta    | 20/11/2023 |
+| 1.0     | 09/12/2023 |
+| 1.1     | 10/12/2023 |
+
+### LTS release (1.1) (recommended version)
+What's new :
+- New colorful CLI UI
+- Support for primary column annotations
+- Revert with `{previous_migration_filename}` feature
+- Type changes are now reflected in migration files
+
+Bug fixes :
+- Fixed revert migration FileNotFound error
+- Resolved java.lang.NoClassDefFoundError when running .jar file
+- Addressed Java to SQL data type mapping issue

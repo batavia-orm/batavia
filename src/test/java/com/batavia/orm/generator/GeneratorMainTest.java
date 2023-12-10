@@ -36,7 +36,7 @@ public class GeneratorMainTest {
   }
 
   @Test // null sql command null alter table context
-  public void tesRunSqlScriptGeneratorToFileNullParameters_1()
+  public void testRunSqlScriptGeneratorToFileNullParameters_1()
     throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
@@ -71,7 +71,7 @@ public class GeneratorMainTest {
   }
 
   @Test // null sql command non null alter table context
-  public void tesRunSqlScriptGeneratorToFileNullSqlCommand_2()
+  public void testRunSqlScriptGeneratorToFileNullSqlCommand_2()
     throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
@@ -109,7 +109,7 @@ public class GeneratorMainTest {
   }
 
   @Test // non-null sql command null alter table context
-  public void tesRunSqlScriptGeneratorToFileNullAlterType_3() throws Exception {
+  public void testRunSqlScriptGeneratorToFileNullAlterType_3() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
 
@@ -146,7 +146,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileCreateTable_4() throws Exception {
+  public void testRunSqlScriptGeneratorToFileCreateTable_4() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
 
@@ -182,7 +182,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileDropTable_5() throws Exception {
+  public void testRunSqlScriptGeneratorToFileDropTable_5() throws Exception {
     Table table = new Table("users");
     table.addColumn(new Column("id", "INT", true, true));
 
@@ -218,7 +218,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileAlterTableAddColumn_6()
+  public void testRunSqlScriptGeneratorToFileAlterTableAddColumn_6()
     throws Exception {
     Table table = new Table("users");
     Column column1 = new Column("id", "INT", true, true);
@@ -275,7 +275,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileAlterTableDropColumn_7()
+  public void testRunSqlScriptGeneratorToFileAlterTableDropColumn_7()
     throws Exception {
     Table table = new Table("users");
     Column column1 = new Column("id", "INT", true, true);
@@ -333,7 +333,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileAlterTableNone_8()
+  public void testRunSqlScriptGeneratorToFileAlterTableNone_8()
     throws Exception {
     Table table = new Table("users");
     ArrayList<Column> columns = new ArrayList<Column>();
@@ -376,7 +376,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileAlterTableOthers_9()
+  public void testRunSqlScriptGeneratorToFileAlterTableOthers_9()
     throws Exception {
     Table table = new Table("users");
     ArrayList<Column> columns = new ArrayList<Column>();
@@ -419,7 +419,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileSqlCommandOthers_10()
+  public void testRunSqlScriptGeneratorToFileSqlCommandOthers_10()
     throws Exception {
     Table table = new Table("users");
     ArrayList<Column> columns = new ArrayList<Column>();
@@ -468,7 +468,7 @@ public class GeneratorMainTest {
   }
 
   @Test
-  public void tesRunSqlScriptGeneratorToFileSqlCommandNone_11()
+  public void testRunSqlScriptGeneratorToFileSqlCommandNone_11()
     throws Exception {
     Table table = new Table("users");
     ArrayList<Column> columns = new ArrayList<Column>();
