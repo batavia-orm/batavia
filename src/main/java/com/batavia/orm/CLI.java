@@ -11,13 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class CLI {
-  private static final Dotenv dotenv = Dotenv.load();
   private BufferedReader reader;
   private Map<String, Command> commandMap = new HashMap<>();
-  private Command command;
+  private static Command command;
 
   public CLI(BufferedReader reader, Map<String, Command> commandMap) {
     this.reader = reader;
@@ -27,8 +25,6 @@ public class CLI {
   public CLI(BufferedReader reader) {
     this.reader = reader;
 
-    // Create a receiver
-    // Receiver receiver = new Receiver(dotenv.get("MIGRATIONS_DIR"));
     Receiver receiver = new Receiver();
 
     // Put all the commands in the hashmap
@@ -55,8 +51,6 @@ public class CLI {
         } else if(userInput.equalsIgnoreCase("help")){
           printUsage();
         }
-
-        String[] args = userInput.split("\\s+");
 
         command = commandMap.get(userInput);
         
