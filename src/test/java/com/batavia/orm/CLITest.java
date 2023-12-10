@@ -189,7 +189,7 @@ class CLITest {
     cli.startCLI();
 
     verify(reader, times(2)).readLine();
-    assertTrue(outContent.toString().contains("Unknown command: unknown"));
+    assertTrue(outContent.toString().contains("Unknown command. Type 'help' for available commands."));
   }
 
 
